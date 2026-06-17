@@ -1,40 +1,53 @@
 /**
  * AppShell Component
- * Root layout wrapper — sidebar + main content area.
+ * Root layout wrapper — sidebar + topbar + scrollable content.
  */
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../sidebar/Sidebar';
 import Topbar from './Topbar';
+import { TopbarProvider } from '../../context/TopbarContext';
 
 export default function AppShell() {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const sidebarWidth = isCollapsed ? 48 : 240;
-
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--bg-color)' }}>
-      <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+    <TopbarProvider>
+      <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
 
-      <main
-        style={{
-          marginLeft: `${sidebarWidth}px`,
-          transition: 'margin-left 0.2s ease',
-          minHeight: '100vh',
-          flex: 1,
-          backgroundColor: 'var(--bg-color)',
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'relative',
-        }}
-      >
-        <Topbar />
+        {/* Sidebar — fixed left */}
+        <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
-        {/* Page content */}
-        <div style={{ padding: '20px 24px', flex: 1, overflowY: 'auto' }}>
-          <Outlet />
+        {/* Right column — topbar + scrollable content */}
+        <div
+          style={{
+            marginLeft: isCollapsed ? '48px' : '240px',
+            transition: 'margin-left 0.2s ease',
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100vh',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Topbar — fixed at top of right side */}
+          <Topbar />
+
+          {/* Page content — scrollable area below topbar */}
+          <main
+            style={{
+              flex: 1,
+              overflowY: 'auto',
+              background: '#0f0f0f',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Outlet />
+          </main>
         </div>
-      </main>
-    </div>
+
+      </div>
+    </TopbarProvider>
   );
 }

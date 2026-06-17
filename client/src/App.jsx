@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AppShell from './components/layout/AppShell';
 import CrmDashboard from './modules/crm';
+import LeadList from './modules/crm/leads/LeadList';
 import ErpDashboard from './modules/erp';
 import SettingsDashboard from './modules/settings';
 
@@ -13,6 +14,7 @@ export default function App() {
           {/* Default redirect to CRM */}
           <Route index element={<Navigate to="/crm" replace />} />
 
+          <Route path="crm/leads" element={<LeadList />} />
           <Route path="crm/*" element={<CrmDashboard />} />
           <Route path="erp/*" element={<ErpDashboard />} />
           <Route path="settings/*" element={<SettingsDashboard />} />

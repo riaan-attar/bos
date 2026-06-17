@@ -1,66 +1,102 @@
 /**
  * Topbar Component
+ * Dynamic breadcrumb from URL + right-side slot from TopbarContext.
  */
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Home, MoreHorizontal } from 'lucide-react';
-import { sidebarConfig } from '../sidebar/sidebar.config';
+import React, { useContext } from 'react';
+import { useLocation, Link } from 'react-router-dom';
+import { Home } from 'lucide-react';
+import { TopbarContext } from '../../context/TopbarContext';
 
+/* ─── Label map ───────────────────────────────────────────────── */
+const formatLabel = (segment) => {
+  const map = {
+    crm: 'CRM',
+    erp: 'ERP',
+    settings: 'Settings',
+    leads: 'Lead',
+    opportunities: 'Opportunity',
+    customers: 'Customer',
+    contacts: 'Contact',
+    campaigns: 'Campaign',
+    pipeline: 'Sales Pipeline',
+    maintenance: 'Maintenance',
+    accounts: 'Accounts',
+    stock: 'Stock',
+    hr: 'HR',
+    payroll: 'Payroll',
+    purchase: 'Purchase',
+    assets: 'Assets',
+    projects: 'Projects',
+  };
+  return map[segment] || segment.charAt(0).toUpperCase() + segment.slice(1);
+};
+
+/* ─── Component ───────────────────────────────────────────────── */
 export default function Topbar() {
-  const [moreHovered, setMoreHovered] = useState(false);
   const location = useLocation();
+  const { rightActions } = useContext(TopbarContext);
 
-  const currentModule = sidebarConfig.find(item =>
-    location.pathname.startsWith(item.path)
-  );
-  
-  const moduleName = currentModule ? currentModule.label : '';
+  const pathSegments = location.pathname.split('/').filter(Boolean);
 
   const sep = <span style={{ color: '#383838', margin: '0 4px' }}>/</span>;
 
   return (
-    <header style={{
-      backgroundColor: '#000000',
-      height: '40px',
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 20px',
-      borderBottom: '1px solid #232323',
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      justifyContent: 'space-between',
-      flexShrink: 0,
-    }}>
-      <nav style={{ display: 'flex', alignItems: 'center', fontSize: '15px', color: '#7c7c7c' }}>
-        <Home size={14} style={{ color: '#7c7c7c', marginRight: '4px' }} />
+    <header
+      style={{
+        backgroundColor: '#000000',
+        height: '40px',
+        minHeight: '40px',
+        flexShrink: 0,
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 16px',
+        borderBottom: '1px solid #232323',
+        zIndex: 100,
+        justifyContent: 'space-between',
+      }}
+    >
+      {/* ── Breadcrumb ─────────────────────────────────────────── */}
+      <nav style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: '#7c7c7c' }}>
+        <Home size={14} style={{ color: '#7c7c7c' }} />
+
+        {/* Static "Dashboard" crumb */}
         {sep}
-        <span style={{ color: '#7c7c7c', fontWeight: 400 }}>Dashboard</span>
-        {moduleName && (
-          <>
-            {sep}
-            <span style={{ color: '#f8f8f8', fontWeight: 600 }}>{moduleName}</span>
-          </>
-        )}
+        <span style={{ color: '#7c7c7c', fontSize: '13px' }}>Dashboard</span>
+
+        {/* Dynamic path segments */}
+        {pathSegments.map((segment, index) => {
+          const path = '/' + pathSegments.slice(0, index + 1).join('/');
+          const isLast = index === pathSegments.length - 1;
+          const label = formatLabel(segment);
+
+          return (
+            <React.Fragment key={path}>
+              {sep}
+              {isLast ? (
+                <span style={{ color: '#f8f8f8', fontSize: '13px', fontWeight: 600 }}>
+                  {label}
+                </span>
+              ) : (
+                <Link
+                  to={path}
+                  style={{ color: '#7c7c7c', fontSize: '13px', textDecoration: 'none' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#afafaf')}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#7c7c7c')}
+                >
+                  {label}
+                </Link>
+              )}
+            </React.Fragment>
+          );
+        })}
       </nav>
 
-      <button
-        onMouseEnter={() => setMoreHovered(true)}
-        onMouseLeave={() => setMoreHovered(false)}
-        style={{
-          background: moreHovered ? '#232323' : 'none',
-          border: 'none',
-          borderRadius: '6px',
-          padding: '4px',
-          cursor: 'pointer',
-          color: moreHovered ? '#7c7c7c' : '#383838',
-          display: 'flex',
-          alignItems: 'center',
-          transition: 'all 0.1s',
-        }}
-      >
-        <MoreHorizontal size={16} />
-      </button>
+      {/* ── Right-side slot (injected by current page) ─────────── */}
+      {rightActions && (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {rightActions}
+        </div>
+      )}
     </header>
   );
 }
