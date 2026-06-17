@@ -93,7 +93,7 @@ function StatCardsRow() {
 
 export default function CrmDashboard() {
   return (
-    <div style={{ fontFamily: 'var(--font-family)', backgroundColor: 'var(--bg-color)' }}>
+    <div style={{ padding: '24px', fontFamily: 'var(--font-family)', backgroundColor: 'var(--bg-color)' }}>
       {/* Section 1 — Stat cards */}
       <StatCardsRow />
 

@@ -15,6 +15,7 @@ export const sidebarConfig = [
       { label: 'Opportunity', path: '/crm/opportunities' },
       { label: 'Customer', path: '/crm/customers' },
       { label: 'Contact', path: '/crm/contacts' },
+      { label: 'Contract', path: '/crm/contracts' },
       { label: 'Communication', path: '/crm/communications' },
       { label: 'Campaign', path: '/crm/campaigns' },
       { label: 'Sales Pipeline', path: '/crm/pipeline' },
