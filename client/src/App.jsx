@@ -5,7 +5,12 @@ import CrmDashboard from './modules/crm';
 import LeadList from './modules/crm/leads/LeadList';
 import LeadDetail from './modules/crm/leads/LeadDetail';
 import OpportunityList from './modules/crm/opportunities/OpportunityList';
+import OpportunityDetail from './modules/crm/opportunities/OpportunityDetail';
 import CustomerList from './modules/crm/customers/CustomerList';
+import CustomerDetail from './modules/crm/customers/CustomerDetail';
+import ContactList from './modules/crm/contacts/ContactList';
+import MaintenanceList from './modules/crm/maintenance/MaintenanceList';
+import SalesPipeline from './modules/crm/pipeline/SalesPipeline';
 import ContractList from './modules/crm/contracts/ContractList';
 import CommunicationList from './modules/crm/communications/CommunicationList';
 import CampaignList from './modules/crm/campaigns/CampaignList';
@@ -14,6 +19,8 @@ import SettingsDashboard from './modules/settings';
 import { LeadsProvider } from './context/LeadsContext';
 import { OpportunitiesProvider } from './context/OpportunitiesContext';
 import { CustomersProvider } from './context/CustomersContext';
+import { ContactsProvider } from './context/ContactsContext';
+import { MaintenanceProvider } from './context/MaintenanceContext';
 import { ContractsProvider } from './context/ContractsContext';
 import { CommunicationsProvider } from './context/CommunicationsContext';
 import { CampaignsProvider } from './context/CampaignsContext';
@@ -22,6 +29,8 @@ export default function App() {
   return (
     <LeadsProvider>
       <OpportunitiesProvider>
+        <ContactsProvider>
+        <MaintenanceProvider>
         <CustomersProvider>
           <ContractsProvider>
             <CommunicationsProvider>
@@ -34,8 +43,13 @@ export default function App() {
 
                       <Route path="crm/leads/:id" element={<LeadDetail />} />
                       <Route path="crm/leads" element={<LeadList />} />
+                      <Route path="crm/opportunities/:id" element={<OpportunityDetail />} />
                       <Route path="crm/opportunities" element={<OpportunityList />} />
+                      <Route path="crm/customers/:id" element={<CustomerDetail />} />
                       <Route path="crm/customers" element={<CustomerList />} />
+                      <Route path="crm/contacts" element={<ContactList />} />
+                      <Route path="crm/maintenance" element={<MaintenanceList />} />
+                      <Route path="crm/pipeline" element={<SalesPipeline />} />
                       <Route path="crm/contracts" element={<ContractList />} />
                       <Route path="crm/communications" element={<CommunicationList />} />
                       <Route path="crm/campaigns" element={<CampaignList />} />
@@ -49,6 +63,8 @@ export default function App() {
             </CommunicationsProvider>
           </ContractsProvider>
         </CustomersProvider>
+        </MaintenanceProvider>
+        </ContactsProvider>
       </OpportunitiesProvider>
     </LeadsProvider>
   );
