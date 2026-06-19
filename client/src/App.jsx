@@ -7,6 +7,8 @@ import LeadList from './modules/crm/leads/LeadList';
 import LeadDetail from './modules/crm/leads/LeadDetail';
 import OpportunityList from './modules/crm/opportunities/OpportunityList';
 import OpportunityDetail from './modules/crm/opportunities/OpportunityDetail';
+import DealList from './modules/crm/deals/DealList';
+import DealDetail from './modules/crm/deals/DealDetail';
 import CustomerList from './modules/crm/customers/CustomerList';
 import CustomerDetail from './modules/crm/customers/CustomerDetail';
 import ContactList from './modules/crm/contacts/ContactList';
@@ -62,8 +64,10 @@ export default function App() {
 
                       <Route path="crm/leads/:id" element={<LeadDetail />} />
                       <Route path="crm/leads" element={<LeadList />} />
-                      <Route path="crm/deals/:id" element={<OpportunityDetail />} />
-                      <Route path="crm/deals" element={<OpportunityList />} />
+                      <Route path="crm/deals/:id" element={<DealDetail />} />
+                      <Route path="crm/deals" element={<DealList />} />
+                      <Route path="crm/opportunities/:id" element={<OpportunityDetail />} />
+                      <Route path="crm/opportunities" element={<OpportunityList />} />
                       <Route path="crm/customers/:id" element={<CustomerDetail />} />
                       <Route path="crm/customers" element={<CustomerList />} />
                       <Route path="crm/contacts" element={<ContactList />} />
