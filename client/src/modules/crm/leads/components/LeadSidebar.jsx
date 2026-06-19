@@ -4,11 +4,13 @@
  * Props: lead, isEditing, onUpdate, activities
  */
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Phone, Mail, MessageCircle, Building2, Briefcase,
   MapPin, Globe, Calendar, User, Home, LayoutGrid,
-  CalendarCheck, Star, IndianRupee,
+  CalendarCheck, Star, IndianRupee, Handshake,
 } from 'lucide-react';
+import { useOpportunities } from '../../../../context/OpportunitiesContext';
 
 /* ─── Status badge config ─────────────────────────────────────── */
 const STATUS_STYLES = {
@@ -197,7 +199,13 @@ function Divider() {
 /*  Component                                                     */
 /* ═══════════════════════════════════════════════════════════════ */
 export default function LeadSidebar({ lead, isEditing, onUpdate, activities = [] }) {
+  const navigate = useNavigate();
+  const { opportunities } = useOpportunities();
   if (!lead) return null;
+
+  const linkedOpp = opportunities.find(
+    o => o.linkedLeadId === lead.id
+  );
 
   const initials =
     ((lead.firstName || '')[0] || '').toUpperCase() +
@@ -398,6 +406,50 @@ export default function LeadSidebar({ lead, isEditing, onUpdate, activities = []
         </div>
       ) : (
         <div style={{ color: '#383838', fontSize: '12px' }}>No notes yet</div>
+      )}
+
+      <Divider />
+
+      {/* ── Linked Opportunity ─────────────────────────────────── */}
+      <SectionTitle>LINKED OPPORTUNITY</SectionTitle>
+      
+      {linkedOpp ? (
+        <div
+          onClick={() => navigate(`/crm/opportunities/${linkedOpp.id}`)}
+          style={{
+            background: '#171717',
+            border: '1px solid #1c1c1c',
+            borderRadius: '6px',
+            padding: '10px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            cursor: 'pointer',
+          }}
+          onMouseEnter={e => e.currentTarget.style.borderColor = '#388AE5'}
+          onMouseLeave={e => e.currentTarget.style.borderColor = '#1c1c1c'}
+        >
+          <Handshake size={14} color="#5aaef2" />
+          <div>
+            <div style={{ fontSize: 11, color: '#5aaef2' }}>
+              {linkedOpp.id}
+            </div>
+            <div style={{ fontSize: 12, color: '#afafaf', marginTop: 2 }}>
+              {linkedOpp.title}
+            </div>
+            <div style={{ fontSize: 11, color: linkedOpp.status === 'Won' ? '#28a745' : '#e79913', marginTop: 2 }}>
+              {linkedOpp.status}
+            </div>
+          </div>
+        </div>
+      ) : lead.status === 'Converted' ? (
+        <span style={{ color: '#e79913', fontSize: 12 }}>
+          Linked opportunity not found
+        </span>
+      ) : (
+        <span style={{ color: '#383838', fontSize: 12 }}>
+          Not yet converted
+        </span>
       )}
     </div>
   );

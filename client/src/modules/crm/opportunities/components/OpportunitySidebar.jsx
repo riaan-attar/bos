@@ -12,6 +12,7 @@ import {
   Calendar, User, Home, LayoutGrid, CalendarCheck, Star,
   IndianRupee, Handshake, Target,
 } from 'lucide-react';
+import { useLeads } from '../../../../context/LeadsContext';
 
 /* ─── Status config ───────────────────────────────────────────── */
 const STATUS_STYLES = {
@@ -221,7 +222,12 @@ function Divider() {
 /* ═══════════════════════════════════════════════════════════════ */
 export default function OpportunitySidebar({ opportunity, isEditing, onUpdate }) {
   const navigate = useNavigate();
+  const { leads } = useLeads();
   if (!opportunity) return null;
+
+  const linkedLead = leads.find(
+    l => l.id === opportunity.linkedLeadId
+  );
 
   const statusStyle = STATUS_STYLES[opportunity.status] || STATUS_STYLES['Open'];
   const stageInfo   = STAGE_PROGRESS[opportunity.status] || STAGE_PROGRESS['Open'];
@@ -566,45 +572,40 @@ export default function OpportunitySidebar({ opportunity, isEditing, onUpdate })
       {/* ── Linked Lead ─────────────────────────────────────────── */}
       <SectionTitle>LINKED LEAD</SectionTitle>
 
-      {opportunity.linkedLeadId ? (
-        <LinkedLeadCard
-          leadId={opportunity.linkedLeadId}
-          leadName={opportunity.linkedLeadName}
-          navigate={navigate}
-        />
+      {linkedLead ? (
+        <div
+          onClick={() => navigate(`/crm/leads/${linkedLead.id}`)}
+          style={{
+            background: '#171717',
+            border: '1px solid #1c1c1c',
+            borderRadius: '6px',
+            padding: '10px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            cursor: 'pointer',
+          }}
+          onMouseEnter={e => e.currentTarget.style.borderColor = '#388AE5'}
+          onMouseLeave={e => e.currentTarget.style.borderColor = '#1c1c1c'}
+        >
+          <User size={14} color="#5aaef2" />
+          <div>
+            <div style={{ fontSize: 11, color: '#5aaef2' }}>
+              {linkedLead.id}
+            </div>
+            <div style={{ fontSize: 12, color: '#afafaf', marginTop: 2 }}>
+              {linkedLead.firstName} {linkedLead.lastName}
+            </div>
+            <div style={{ fontSize: 11, color: '#7c7c7c', marginTop: 2 }}>
+              {linkedLead.status}
+            </div>
+          </div>
+        </div>
       ) : (
-        <div style={{ color: '#383838', fontSize: '12px' }}>No linked lead</div>
+        <span style={{ color: '#383838', fontSize: 12 }}>
+          No linked lead
+        </span>
       )}
-    </div>
-  );
-}
-
-/* ─── Linked Lead Card ────────────────────────────────────────── */
-function LinkedLeadCard({ leadId, leadName, navigate }) {
-  const [hov, hoverProps] = useHover();
-  return (
-    <div
-      {...hoverProps}
-      onClick={() => navigate(`/crm/leads/${leadId}`)}
-      style={{
-        background: '#171717',
-        border: `1px solid ${hov ? '#388AE5' : '#1c1c1c'}`,
-        borderRadius: '6px',
-        padding: '10px 12px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        cursor: 'pointer',
-        transition: 'border-color 0.15s',
-      }}
-    >
-      <User size={14} color="#5aaef2" />
-      <div>
-        <div style={{ fontSize: '11px', color: '#5aaef2' }}>{leadId}</div>
-        {leadName && (
-          <div style={{ fontSize: '12px', color: '#afafaf', marginTop: '2px' }}>{leadName}</div>
-        )}
-      </div>
     </div>
   );
 }

@@ -9,8 +9,10 @@ import React, { useState } from 'react';
 import {
   Phone, Mail, MessageCircle, MapPin, User,
   Briefcase, Calendar, Home, IndianRupee,
-  FileText, CreditCard,
+  FileText, CreditCard, Handshake,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useOpportunities } from '../../../../context/OpportunitiesContext';
 
 /* ─── Status config ───────────────────────────────────────────── */
 const STATUS_STYLES = {
@@ -165,7 +167,13 @@ function Divider() {
 /*  Component                                                     */
 /* ═══════════════════════════════════════════════════════════════ */
 export default function CustomerSidebar({ customer, isEditing, onUpdate }) {
+  const navigate = useNavigate();
+  const { opportunities } = useOpportunities();
   if (!customer) return null;
+
+  const linkedOpp = opportunities.find(
+    o => o.id === customer.linkedOpportunityId
+  );
 
   const name = customer.customerName || '';
   const initials = name.slice(0, 2).toUpperCase() || '??';
@@ -347,18 +355,40 @@ export default function CustomerSidebar({ customer, isEditing, onUpdate }) {
 
       {/* ── Linked Opportunities ────────────────────────────────── */}
       <SectionTitle>LINKED OPPORTUNITIES</SectionTitle>
-      <div
-        style={{
-          background: '#171717',
-          border: '1px solid #1c1c1c',
-          borderRadius: '6px',
-          padding: '10px 12px',
-          fontSize: '12px',
-          color: '#383838',
-        }}
-      >
-        No linked opportunities
-      </div>
+      {linkedOpp ? (
+        <div
+          onClick={() => navigate(`/crm/opportunities/${linkedOpp.id}`)}
+          style={{
+            background: '#171717',
+            border: '1px solid #1c1c1c',
+            borderRadius: '6px',
+            padding: '10px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            cursor: 'pointer',
+          }}
+          onMouseEnter={e => e.currentTarget.style.borderColor = '#388AE5'}
+          onMouseLeave={e => e.currentTarget.style.borderColor = '#1c1c1c'}
+        >
+          <Handshake size={14} color="#5aaef2" />
+          <div>
+            <div style={{ fontSize: 11, color: '#5aaef2' }}>
+              {linkedOpp.id}
+            </div>
+            <div style={{ fontSize: 12, color: '#afafaf', marginTop: 2 }}>
+              {linkedOpp.title}
+            </div>
+            <div style={{ fontSize: 11, color: '#28a745', marginTop: 2 }}>
+              ₹{linkedOpp.amount?.toLocaleString('en-IN')}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <span style={{ color: '#383838', fontSize: 12 }}>
+          No linked opportunities
+        </span>
+      )}
     </div>
   );
 }
