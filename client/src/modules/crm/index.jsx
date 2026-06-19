@@ -1,6 +1,6 @@
 /**
  * CRM Dashboard — client/src/modules/crm/index.jsx
- * Mirrors Frappe CRM's dashboard layout with mock data only.
+ * Mirrors Frappe CRM's dashboard layout with live context data.
  */
 import React from 'react';
 import {
@@ -10,6 +10,8 @@ import './crm.css';
 import StatCard from './StatCard';
 import ChartCard from './ChartCard';
 import EmptyChart from './EmptyChart';
+import { useLeads } from '../../context/LeadsContext';
+import { useOpportunities } from '../../context/OpportunitiesContext';
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 
@@ -64,14 +66,35 @@ function BosLineChart({ data }) {
 
 // ─── Section 1: Stat Cards ────────────────────────────────────────────────────
 
-const STATS = [
-  { title: 'New Lead (Last 1 Month)', value: 0 },
-  { title: 'New Opportunity (Last 1 Month)', value: 0 },
-  { title: 'Won Opportunity (Last 1 Month)', value: 0 },
-  { title: 'Open Opportunity', value: 0 },
-];
-
 function StatCardsRow() {
+  const { leads } = useLeads();
+  const { opportunities } = useOpportunities();
+
+  const thisMonth = new Date().getMonth();
+  const thisYear = new Date().getFullYear();
+
+  const newLeadsThisMonth = leads.filter(l => {
+    const d = new Date(l.createdOn.split('/').reverse().join('-'));
+    return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+  }).length;
+
+  const newOppsThisMonth = opportunities.filter(o => {
+    const d = new Date(o.createdOn.split('/').reverse().join('-'));
+    return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+  }).length;
+
+  const wonOpps = opportunities.filter(o => o.status === 'Won').length;
+  const openOpps = opportunities.filter(
+    o => !['Won', 'Lost'].includes(o.status)
+  ).length;
+
+  const STATS = [
+    { title: 'New Lead (Last 1 Month)', value: newLeadsThisMonth },
+    { title: 'New Opportunity (Last 1 Month)', value: newOppsThisMonth },
+    { title: 'Won Opportunity (Last 1 Month)', value: wonOpps },
+    { title: 'Open Opportunity', value: openOpps },
+  ];
+
   return (
     <div
       className="crm-stat-grid"
@@ -82,7 +105,7 @@ function StatCardsRow() {
         marginBottom: '16px',
       }}
     >
-      {STATS.map((s, i) => (
+      {STATS.map((s) => (
         <StatCard key={s.title} title={s.title} value={s.value} />
       ))}
     </div>
