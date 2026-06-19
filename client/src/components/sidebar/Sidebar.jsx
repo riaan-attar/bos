@@ -31,6 +31,7 @@ function SidebarSectionLabel({ label, isOpen, onToggle, isCollapsed }) {
 }
 
 export default function Sidebar({ isCollapsed, setIsCollapsed }) {
+  const [crmOpen, setCrmOpen] = useState(true);
   const [publicViewsOpen, setPublicViewsOpen] = useState(true);
   const [pinnedViewsOpen, setPinnedViewsOpen] = useState(true);
 
@@ -66,9 +67,23 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
           padding: '4px 0',
         }}
       >
-        {SIDEBAR_CONFIG.main.map(item => (
-          <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
-        ))}
+        <SidebarSectionLabel
+          label="CRM"
+          isOpen={crmOpen}
+          onToggle={() => setCrmOpen(p => !p)}
+          isCollapsed={isCollapsed}
+        />
+        <div
+          style={{
+            maxHeight: crmOpen ? '800px' : '0',
+            overflow: 'hidden',
+            transition: 'max-height 0.2s ease',
+          }}
+        >
+          {SIDEBAR_CONFIG.main.map(item => (
+            <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
+          ))}
+        </div>
 
         <SidebarSectionLabel
           label="Public Views"
