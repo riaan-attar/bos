@@ -1,111 +1,89 @@
-/**
- * SidebarBrand Component
- * BOS logo, name, subtitle and collapse toggle.
- */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 
 export default function SidebarBrand({ isCollapsed, onToggleCollapse }) {
   return (
     <div
       style={{
-        padding: '12px',
+        padding: '12px 16px',
+        borderBottom: '1px solid #1c1c1c',
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
-        borderBottom: '1px solid var(--divider-color)',
+        gap: '10px',
+        marginBottom: '4px',
         flexShrink: 0,
-        minHeight: '52px',
+        height: '52px',
+        boxSizing: 'border-box',
       }}
     >
       <Link
         to="/"
-        style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', overflow: 'hidden' }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          textDecoration: 'none',
+          overflow: 'hidden',
+          flex: 1,
+        }}
       >
-        {/* Brand icon */}
         <div
           style={{
             width: '28px',
             height: '28px',
             backgroundColor: '#171717',
-            border: '1px solid #383838',
+            border: '1px solid #2b2b2b',
             borderRadius: '6px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            fontSize: '13px',
             fontWeight: 700,
-            fontSize: '15px',
             color: '#f8f8f8',
-            letterSpacing: '-0.5px',
             flexShrink: 0,
           }}
         >
           B
         </div>
 
-        {/* Brand text */}
         {!isCollapsed && (
-          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.3, overflow: 'hidden' }}>
-            <span style={{ fontSize: '15px', fontWeight: 600, color: '#f8f8f8', whiteSpace: 'nowrap' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <span style={{ fontSize: '14px', fontWeight: 600, color: '#f8f8f8', whiteSpace: 'nowrap' }}>
               BOS
             </span>
-            <span style={{ fontSize: '13px', color: '#7c7c7c', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: '11px', color: '#424242', marginTop: '1px', whiteSpace: 'nowrap' }}>
               Avenue Builders
             </span>
           </div>
         )}
       </Link>
 
-      {/* Collapse chevron */}
       {!isCollapsed && (
         <button
-          onClick={onToggleCollapse}
+          onClick={(e) => {
+            e.preventDefault();
+            onToggleCollapse();
+          }}
           aria-label="Collapse sidebar"
           style={{
             marginLeft: 'auto',
-            color: '#7c7c7c',
+            color: '#424242',
             cursor: 'pointer',
-            padding: '4px',
+            padding: '2px',
             borderRadius: '4px',
             background: 'none',
             border: 'none',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            transition: 'background 0.1s',
+            transition: 'color 0.1s',
             flexShrink: 0,
           }}
-          onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--sidebar-hover-color)'}
-          onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+          onMouseEnter={e => e.currentTarget.style.color = '#7c7c7c'}
+          onMouseLeave={e => e.currentTarget.style.color = '#424242'}
         >
-          <ChevronLeft size={16} />
-        </button>
-      )}
-
-      {/* Expand button when collapsed — centred below the icon */}
-      {isCollapsed && (
-        <button
-          onClick={onToggleCollapse}
-          aria-label="Expand sidebar"
-          style={{
-            marginLeft: 'auto',
-            color: '#7c7c7c',
-            cursor: 'pointer',
-            padding: '4px',
-            borderRadius: '4px',
-            background: 'none',
-            border: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'background 0.1s',
-            flexShrink: 0,
-          }}
-          onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--sidebar-hover-color)'}
-          onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
-        >
-          <ChevronRight size={16} />
+          <ChevronLeft size={14} />
         </button>
       )}
     </div>

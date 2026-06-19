@@ -1,95 +1,97 @@
-/**
- * SidebarFooter Component
- * Search and Notifications rows pinned to the sidebar bottom.
- */
-import React from 'react';
-import { Search, Bell } from 'lucide-react';
-
-const rowStyle = {
-  height: '32px',
-  display: 'flex',
-  alignItems: 'center',
-  padding: '0 8px',
-  margin: '1px 4px',
-  borderRadius: '6px',
-  gap: '8px',
-  cursor: 'pointer',
-  color: '#afafaf',
-  fontSize: '14.5px',
-  background: 'none',
-  border: 'none',
-  width: 'calc(100% - 8px)',
-  fontFamily: 'inherit',
-  transition: 'background 0.1s',
-  textAlign: 'left',
-};
-
-function FooterRow({ icon: Icon, label, isCollapsed, right }) {
-  const [hovered, setHovered] = React.useState(false);
-
-  return (
-    <button
-      style={{
-        ...rowStyle,
-        backgroundColor: hovered ? 'var(--sidebar-hover-color)' : 'transparent',
-        color: hovered ? '#f8f8f8' : '#afafaf',
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <Icon size={14} style={{ flexShrink: 0, color: 'inherit' }} />
-      {!isCollapsed && (
-        <>
-          <span style={{ flex: 1, whiteSpace: 'nowrap' }}>{label}</span>
-          {right}
-        </>
-      )}
-    </button>
-  );
-}
+import React, { useState } from 'react';
+import { Search, Settings } from 'lucide-react';
 
 export default function SidebarFooter({ isCollapsed }) {
-  const kbdStyle = {
-    backgroundColor: 'var(--surface-gray-3)',
-    border: '1px solid #424242',
-    borderRadius: '4px',
-    fontSize: '12px',
-    padding: '1px 5px',
-    color: '#7c7c7c',
-    fontFamily: 'inherit',
-    whiteSpace: 'nowrap',
-  };
+  const [profileHovered, setProfileHovered] = useState(false);
+  const [searchHovered, setSearchHovered] = useState(false);
 
   return (
     <div
       style={{
-        borderTop: '1px solid var(--divider-color)',
-        padding: '8px 4px',
+        borderTop: '1px solid #1c1c1c',
+        padding: '8px 6px',
         flexShrink: 0,
       }}
     >
-      <FooterRow
-        icon={Search}
-        label="Search"
-        isCollapsed={isCollapsed}
-        right={<kbd style={kbdStyle}>Ctrl K</kbd>}
-      />
-      <FooterRow
-        icon={Bell}
-        label="Notifications"
-        isCollapsed={isCollapsed}
-        right={
-          <span
+      <div
+        onMouseEnter={() => setProfileHovered(true)}
+        onMouseLeave={() => setProfileHovered(false)}
+        style={{
+          height: '36px',
+          display: 'flex',
+          alignItems: 'center',
+          padding: isCollapsed ? '0' : '0 10px',
+          justifyContent: isCollapsed ? 'center' : 'flex-start',
+          gap: '8px',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          background: profileHovered ? '#171717' : 'transparent',
+          transition: 'background 0.1s',
+        }}
+      >
+        <div
+          style={{
+            width: '24px',
+            height: '24px',
+            borderRadius: '50%',
+            background: '#388AE5',
+            fontSize: '10px',
+            fontWeight: 600,
+            color: '#ffffff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >
+          AB
+        </div>
+        {!isCollapsed && (
+          <>
+            <span style={{ fontSize: '12px', color: '#7c7c7c', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              Admin User
+            </span>
+            <Settings size={13} color="#383838" style={{ marginLeft: 'auto', flexShrink: 0 }} />
+          </>
+        )}
+      </div>
+
+      {!isCollapsed && (
+        <div
+          onMouseEnter={() => setSearchHovered(true)}
+          onMouseLeave={() => setSearchHovered(false)}
+          style={{
+            height: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '0 10px',
+            gap: '8px',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            marginTop: '2px',
+            background: searchHovered ? '#171717' : 'transparent',
+            transition: 'background 0.1s',
+          }}
+        >
+          <Search size={13} color="#383838" style={{ flexShrink: 0 }} />
+          <span style={{ fontSize: '12px', color: '#383838', flex: 1, whiteSpace: 'nowrap' }}>
+            Search
+          </span>
+          <div
             style={{
-              width: '7px',
-              height: '7px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--blue-500)',
+              background: '#1c1c1c',
+              border: '1px solid #2b2b2b',
+              borderRadius: '4px',
+              fontSize: '10px',
+              padding: '1px 5px',
+              color: '#383838',
               flexShrink: 0,
             }}
-          />
-        }
-      />
+          >
+            Ctrl K
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,56 +1,83 @@
-/**
- * Configuration for the main sidebar navigation.
- * Add new modules and sub-items here.
- */
-import { Briefcase, Boxes, Settings } from 'lucide-react';
+export const SIDEBAR_CONFIG = {
+  main: [
+    {
+      key: 'notifications',
+      label: 'Notifications',
+      icon: 'Bell',
+      route: '/notifications',
+      badge: 7,
+    },
+    {
+      key: 'leads',
+      label: 'Leads',
+      icon: 'Users',
+      route: '/crm/leads',
+    },
+    {
+      key: 'deals',
+      label: 'Deals',
+      icon: 'Handshake',
+      route: '/crm/deals',
+    },
+    {
+      key: 'contacts',
+      label: 'Contacts',
+      icon: 'UserCircle',
+      route: '/crm/contacts',
+    },
+    {
+      key: 'organizations',
+      label: 'Organizations',
+      icon: 'Building2',
+      route: '/crm/organizations',
+    },
+    {
+      key: 'notes',
+      label: 'Notes',
+      icon: 'StickyNote',
+      route: '/crm/notes',
+    },
+    {
+      key: 'tasks',
+      label: 'Tasks',
+      icon: 'CheckSquare',
+      route: '/crm/tasks',
+    },
+    {
+      key: 'callLogs',
+      label: 'Call Logs',
+      icon: 'Phone',
+      route: '/crm/call-logs',
+    },
+    {
+      key: 'emailTemplates',
+      label: 'Email Templates',
+      icon: 'Mail',
+      route: '/crm/email-templates',
+    },
+  ],
 
-export const sidebarConfig = [
-  {
-    id: 'crm',
-    label: 'CRM',
-    icon: Briefcase,
-    path: '/crm',
-    subItems: [
-      { label: 'Lead', path: '/crm/leads' },
-      { label: 'Opportunity', path: '/crm/opportunities' },
-      { label: 'Customer', path: '/crm/customers' },
-      { label: 'Contact', path: '/crm/contacts' },
-      { label: 'Contract', path: '/crm/contracts' },
-      { label: 'Communication', path: '/crm/communications' },
-      { label: 'Campaign', path: '/crm/campaigns' },
-      { label: 'Sales Pipeline', path: '/crm/pipeline' },
-      { label: 'Reports', path: '/crm/reports' },
-      { label: 'Maintenance', path: '/crm/maintenance' },
-    ]
-  },
-  {
-    id: 'erp',
-    label: 'ERP',
-    icon: Boxes,
-    path: '/erp',
-    subItems: [
-      { label: 'Accounts', path: '/erp/accounts' },
-      { label: 'Stock', path: '/erp/stock' },
-      { label: 'HR', path: '/erp/hr' },
-      { label: 'Payroll', path: '/erp/payroll' },
-      { label: 'Purchase', path: '/erp/purchase' },
-      { label: 'Assets', path: '/erp/assets' },
-      { label: 'Projects', path: '/erp/projects' },
-      { label: 'Reports', path: '/erp/reports' },
-    ]
-  },
-  {
-    id: 'settings',
-    label: 'Settings',
-    icon: Settings,
-    path: '/settings',
-    subItems: [
-      { label: 'Users & Permissions', path: '/settings/users' },
-      { label: 'System Settings', path: '/settings/system' },
-      { label: 'Email Settings', path: '/settings/email' },
-      { label: 'Notification Settings', path: '/settings/notifications' },
-      { label: 'Data Import', path: '/settings/import' },
-      { label: 'Backup', path: '/settings/backup' },
-    ]
-  }
-];
+  publicViews: [
+    {
+      key: 'myLeads',
+      label: 'My Leads',
+      icon: 'User',
+      route: '/crm/leads?filter=mine',
+    },
+    {
+      key: 'myDeals',
+      label: 'My Deals',
+      icon: 'User',
+      route: '/crm/deals?filter=mine',
+    },
+  ],
+
+  pinnedViews: [
+    {
+      key: 'incomingCalls',
+      label: 'Incoming Calls',
+      icon: 'PhoneIncoming',
+      route: '/crm/incoming-calls',
+    },
+  ],
+};
