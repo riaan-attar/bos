@@ -264,6 +264,7 @@ export default function LeadSidebar({ lead, isEditing, onUpdate, activities = []
         {/* Status badge */}
         <div style={{ marginTop: '8px', display: 'flex', justifyContent: 'center' }}>
           <span
+            title={!isEditing ? "Click Edit to change status" : ""}
             onClick={handleStatusClick}
             style={{
               ...statusStyle,

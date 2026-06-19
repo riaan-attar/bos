@@ -8,6 +8,7 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Trash2, ArrowRightCircle, Pencil, Check } from 'lucide-react';
 import { useLeads } from '../../../context/LeadsContext';
+import { useOpportunities } from '../../../context/OpportunitiesContext';
 import { TopbarContext } from '../../../context/TopbarContext';
 import LeadSidebar from './components/LeadSidebar';
 import ActivityTimeline from './components/ActivityTimeline';
@@ -48,11 +49,39 @@ function DeleteBtn({ onClick }) {
   );
 }
 
-function ConvertBtn() {
+function ConvertBtn({ onClick, isConverted }) {
   const [hov, hoverProps] = useHover();
+  
+  if (isConverted) {
+    return (
+      <button
+        {...hoverProps}
+        onClick={onClick}
+        style={{
+          background: 'transparent',
+          border: '1px solid #173b2c',
+          borderRadius: '6px',
+          padding: '4px 12px',
+          fontSize: '12px',
+          color: '#28a745',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '5px',
+          cursor: 'pointer',
+          fontFamily: 'Inter, sans-serif',
+          transition: 'background 0.15s',
+        }}
+      >
+        <ArrowRightCircle size={13} />
+        View Opportunity →
+      </button>
+    );
+  }
+
   return (
     <button
       {...hoverProps}
+      onClick={onClick}
       style={{
         background: hov ? '#232323' : 'transparent',
         border: '1px solid #343434',
@@ -111,6 +140,7 @@ export default function LeadDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { leads, updateLead, deleteLead } = useLeads();
+  const { opportunities, addOpportunity } = useOpportunities();
   const { setRightActions } = useContext(TopbarContext);
 
   const lead = leads.find(l => l.id === id);
@@ -120,6 +150,8 @@ export default function LeadDetail() {
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [showCallModal, setShowCallModal] = useState(false);
   const [activities, setActivities] = useState([]);
+  const [showConvertConfirm, setShowConvertConfirm] = useState(false);
+  const [convertType, setConvertType] = useState('');
 
   /* Sync editData when lead changes */
   useEffect(() => {
@@ -160,17 +192,60 @@ export default function LeadDetail() {
     }
   }, [isEditing, handleSave]);
 
+  /* Convert to Opportunity */
+  const handleConvertToOpportunity = useCallback(() => {
+    const alreadyExists = opportunities.find(o => o.linkedLeadId === lead.id);
+    if (alreadyExists) {
+      navigate(`/crm/opportunities/${alreadyExists.id}`);
+      return;
+    }
+
+    const newOpp = {
+      id: `OPP-${String(opportunities.length + 1).padStart(4, '0')}`,
+      title: `${lead.propertyType || 'Property'} - ${lead.firstName} ${lead.lastName}`,
+      opportunityFrom: 'Lead',
+      party: `${lead.firstName} ${lead.lastName}`,
+      status: 'Open',
+      amount: 0,
+      propertyType: lead.propertyType || '',
+      preferredArea: lead.preferredArea || '',
+      configuration: '',
+      budgetRange: lead.budgetRange || '',
+      source: lead.leadSource || '',
+      expectedCloseDate: '',
+      assignedTo: lead.assignedTo || '',
+      priority: lead.priority || 'Medium',
+      linkedLeadId: lead.id,
+      notes: lead.notes || '',
+      createdOn: new Date().toLocaleDateString('en-IN'),
+    };
+
+    addOpportunity(newOpp);
+    updateLead(lead.id, { status: 'Converted' });
+    addActivity('status', `Lead converted to Opportunity ${newOpp.id}`);
+    navigate(`/crm/opportunities/${newOpp.id}`);
+  }, [lead, opportunities, addOpportunity, updateLead, addActivity, navigate]);
+
+  const handleConvertClick = useCallback(() => {
+    if (lead?.status === 'Converted') {
+      handleConvertToOpportunity();
+    } else {
+      setConvertType('Opportunity');
+      setShowConvertConfirm(true);
+    }
+  }, [lead?.status, handleConvertToOpportunity]);
+
   /* Inject topbar actions */
   useEffect(() => {
     setRightActions(
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <DeleteBtn onClick={handleDelete} />
-        <ConvertBtn />
+        <ConvertBtn onClick={handleConvertClick} isConverted={lead?.status === 'Converted'} />
         <EditSaveBtn isEditing={isEditing} onClick={toggleEdit} />
       </div>
     );
     return () => setRightActions(null);
-  }, [isEditing, setRightActions, handleDelete, toggleEdit]);
+  }, [isEditing, setRightActions, handleDelete, handleConvertClick, toggleEdit, lead?.status]);
 
   /* Field update handler */
   const handleFieldUpdate = useCallback((field, val) => {
@@ -247,6 +322,72 @@ export default function LeadDetail() {
           setShowCallModal(false);
         }}
       />
+      {showConvertConfirm && (
+        <div style={{
+          position: 'fixed', inset: 0,
+          background: 'rgba(0,0,0,0.75)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <div style={{
+            background: '#1a1a1a',
+            border: '1px solid #2b2b2b',
+            borderRadius: '10px',
+            padding: '24px',
+            width: '380px',
+          }}>
+            <div style={{ textAlign: 'center', marginBottom: '12px' }}>
+              <ArrowRightCircle size={32} color="#388AE5" />
+            </div>
+            <div style={{ fontSize: '15px', fontWeight: '600', color: '#f8f8f8', textAlign: 'center' }}>
+              Convert to {convertType}?
+            </div>
+            <div style={{ fontSize: '13px', color: '#7c7c7c', textAlign: 'center', marginTop: '8px', lineHeight: '1.5' }}>
+              {convertType === 'Opportunity'
+                ? "This will create a new Opportunity from this lead and mark the lead as Converted."
+                : "This will create a new Customer record and mark this opportunity as Won."}
+            </div>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px' }}>
+              <button
+                onClick={() => setShowConvertConfirm(false)}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid #343434',
+                  borderRadius: '6px',
+                  padding: '8px 20px',
+                  fontSize: '13px',
+                  color: '#afafaf',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowConvertConfirm(false);
+                  if (convertType === 'Opportunity') {
+                    handleConvertToOpportunity();
+                  }
+                }}
+                style={{
+                  background: '#388AE5',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '8px 20px',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  color: '#ffffff',
+                  cursor: 'pointer'
+                }}
+              >
+                Confirm Convert
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

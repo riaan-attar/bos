@@ -8,6 +8,8 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Trash2, UserCheck, Pencil, Check } from 'lucide-react';
 import { useOpportunities } from '../../../context/OpportunitiesContext';
+import { useCustomers } from '../../../context/CustomersContext';
+import { ArrowRightCircle } from 'lucide-react';
 import { TopbarContext } from '../../../context/TopbarContext';
 import OpportunitySidebar from './components/OpportunitySidebar';
 import OpportunityTimeline from './components/OpportunityTimeline';
@@ -49,8 +51,35 @@ function DeleteBtn({ onClick }) {
   );
 }
 
-function ConvertToCustomerBtn({ onClick }) {
+function ConvertToCustomerBtn({ onClick, isWon }) {
   const [hov, hoverProps] = useHover();
+
+  if (isWon) {
+    return (
+      <button
+        {...hoverProps}
+        onClick={onClick}
+        style={{
+          background: 'transparent',
+          border: '1px solid #173b2c',
+          borderRadius: '6px',
+          padding: '4px 12px',
+          fontSize: '12px',
+          color: '#28a745',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '5px',
+          cursor: 'pointer',
+          fontFamily: 'Inter, sans-serif',
+          transition: 'background 0.15s',
+        }}
+      >
+        <UserCheck size={13} />
+        View Customer →
+      </button>
+    );
+  }
+
   return (
     <button
       {...hoverProps}
@@ -113,6 +142,7 @@ export default function OpportunityDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { opportunities, updateOpportunity, deleteOpportunity } = useOpportunities();
+  const { customers, addCustomer } = useCustomers();
   const { setRightActions } = useContext(TopbarContext);
 
   const opportunity = opportunities.find(o => o.id === id);
@@ -123,6 +153,8 @@ export default function OpportunityDetail() {
   const [showCallModal, setShowCallModal] = useState(false);
   const [showActivityModal, setShowActivityModal] = useState(false);
   const [activities, setActivities] = useState([]);
+  const [showConvertConfirm, setShowConvertConfirm] = useState(false);
+  const [convertType, setConvertType] = useState('');
 
   /* Sync editData when opportunity changes */
   useEffect(() => {
@@ -164,21 +196,58 @@ export default function OpportunityDetail() {
   }, [isEditing, handleSave]);
 
   /* Convert to Customer */
-  const handleConvert = useCallback(() => {
-    console.log('convert', opportunity?.id);
-  }, [opportunity]);
+  const handleConvertToCustomer = useCallback(() => {
+    const alreadyExists = customers.find(c => c.linkedOpportunityId === opportunity.id);
+    if (alreadyExists) {
+      navigate(`/crm/customers/${alreadyExists.id}`);
+      return;
+    }
+
+    const newCustomer = {
+      id: `CUST-${String(customers.length + 1).padStart(4, '0')}`,
+      customerName: opportunity.party,
+      customerGroup: 'Individual',
+      territory: opportunity.preferredArea || '',
+      contactPerson: opportunity.party,
+      email: '',
+      mobile: '',
+      address: '',
+      gstin: '',
+      panNumber: '',
+      assignedTo: opportunity.assignedTo || '',
+      status: 'Active',
+      totalDeals: 1,
+      totalValue: opportunity.amount || 0,
+      linkedOpportunityId: opportunity.id,
+      createdOn: new Date().toLocaleDateString('en-IN'),
+    };
+
+    addCustomer(newCustomer);
+    updateOpportunity(opportunity.id, { status: 'Won' });
+    addActivity('status', `Opportunity converted to Customer ${newCustomer.id}`);
+    navigate(`/crm/customers/${newCustomer.id}`);
+  }, [opportunity, customers, addCustomer, updateOpportunity, addActivity, navigate]);
+
+  const handleConvertClick = useCallback(() => {
+    if (opportunity?.status === 'Won') {
+      handleConvertToCustomer();
+    } else {
+      setConvertType('Customer');
+      setShowConvertConfirm(true);
+    }
+  }, [opportunity?.status, handleConvertToCustomer]);
 
   /* Inject topbar actions */
   useEffect(() => {
     setRightActions(
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <DeleteBtn onClick={handleDelete} />
-        <ConvertToCustomerBtn onClick={handleConvert} />
+        <ConvertToCustomerBtn onClick={handleConvertClick} isWon={opportunity?.status === 'Won'} />
         <EditSaveBtn isEditing={isEditing} onClick={toggleEdit} />
       </div>
     );
     return () => setRightActions(null);
-  }, [isEditing, setRightActions, handleDelete, handleConvert, toggleEdit]);
+  }, [isEditing, setRightActions, handleDelete, handleConvertClick, toggleEdit, opportunity?.status]);
 
   /* ── Not found ──────────────────────────────────────────────── */
   if (!opportunity) {
@@ -253,6 +322,72 @@ export default function OpportunityDetail() {
           setShowActivityModal(false);
         }}
       />
+      {showConvertConfirm && (
+        <div style={{
+          position: 'fixed', inset: 0,
+          background: 'rgba(0,0,0,0.75)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <div style={{
+            background: '#1a1a1a',
+            border: '1px solid #2b2b2b',
+            borderRadius: '10px',
+            padding: '24px',
+            width: '380px',
+          }}>
+            <div style={{ textAlign: 'center', marginBottom: '12px' }}>
+              <ArrowRightCircle size={32} color="#388AE5" />
+            </div>
+            <div style={{ fontSize: '15px', fontWeight: '600', color: '#f8f8f8', textAlign: 'center' }}>
+              Convert to {convertType}?
+            </div>
+            <div style={{ fontSize: '13px', color: '#7c7c7c', textAlign: 'center', marginTop: '8px', lineHeight: '1.5' }}>
+              {convertType === 'Opportunity'
+                ? "This will create a new Opportunity from this lead and mark the lead as Converted."
+                : "This will create a new Customer record and mark this opportunity as Won."}
+            </div>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px' }}>
+              <button
+                onClick={() => setShowConvertConfirm(false)}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid #343434',
+                  borderRadius: '6px',
+                  padding: '8px 20px',
+                  fontSize: '13px',
+                  color: '#afafaf',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowConvertConfirm(false);
+                  if (convertType === 'Customer') {
+                    handleConvertToCustomer();
+                  }
+                }}
+                style={{
+                  background: '#388AE5',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '8px 20px',
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  color: '#ffffff',
+                  cursor: 'pointer'
+                }}
+              >
+                Confirm Convert
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { DragDropContext } from '@hello-pangea/dnd';
 import { Columns, SlidersHorizontal, Plus } from 'lucide-react';
+import { useOpportunities } from '../../../context/OpportunitiesContext';
 import { TopbarContext } from '../../../context/TopbarContext';
 import KanbanColumn from './components/KanbanColumn';
 import CardDetailDrawer from './components/CardDetailDrawer';
@@ -263,20 +264,63 @@ function SummaryPill({ label, value, valueColor }) {
   );
 }
 
+const mapStatusToStage = (status) => {
+  const map = {
+    'Open':          'prospecting',
+    'Replied':       'qualification',
+    'Interested':    'proposal',
+    'Negotiation':   'negotiation',
+    'Won':           'won',
+    'Lost':          'lost',
+  };
+  return map[status] || 'prospecting';
+};
+
+const calculateDays = (createdOn) => {
+  try {
+    const parts = createdOn.split('/');
+    const date = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    const diff = Date.now() - date.getTime();
+    return Math.floor(diff / (1000 * 60 * 60 * 24));
+  } catch {
+    return 0;
+  }
+};
+
 /* ═══════════════════════════════════════════════════════════════ */
 /*  Component                                                     */
 /* ═══════════════════════════════════════════════════════════════ */
 export default function SalesPipeline() {
-  const [deals, setDeals] = useState(MOCK_DEALS);
+  const { opportunities, updateOpportunity } = useOpportunities();
   const [selectedDeal, setSelectedDeal] = useState(null);
   const { setRightActions } = useContext(TopbarContext);
 
+  const mappedDeals = opportunities.map(opp => ({
+    id: opp.id,
+    title: opp.title,
+    customerName: opp.party,
+    amount: opp.amount || 0,
+    stage: mapStatusToStage(opp.status),
+    priority: opp.priority || 'Medium',
+    assignedTo: opp.assignedTo || '—',
+    daysInStage: calculateDays(opp.createdOn),
+    propertyType: opp.propertyType || 'Flat',
+    source: opp.source || '—',
+    avatar: opp.party
+      ? opp.party.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase()
+      : 'NA',
+    avatarBg: '#0e2037',
+    avatarColor: '#5aaef2',
+  }));
+
+  const kanbanDeals = opportunities.length > 0 ? mappedDeals : MOCK_DEALS;
+
   /* ── Summary stats ─────────────────────────────────────────── */
-  const totalDeals    = deals.filter(d => d.stage !== 'lost').length;
-  const pipelineValue = deals
+  const totalDeals    = kanbanDeals.filter(d => d.stage !== 'lost').length;
+  const pipelineValue = kanbanDeals
     .filter(d => !['won', 'lost'].includes(d.stage))
     .reduce((sum, d) => sum + (Number(d.amount) || 0), 0);
-  const wonValue      = deals
+  const wonValue      = kanbanDeals
     .filter(d => d.stage === 'won')
     .reduce((sum, d) => sum + (Number(d.amount) || 0), 0);
 
@@ -289,20 +333,40 @@ export default function SalesPipeline() {
       destination.index === source.index
     ) return;
 
-    setDeals(prev =>
-      prev.map(deal =>
-        deal.id === draggableId
-          ? { ...deal, stage: destination.droppableId, daysInStage: 0 }
-          : deal
-      )
-    );
-  }, []);
+    const newStage = destination.droppableId;
+    
+    const stageToStatus = {
+      'prospecting':  'Open',
+      'qualification':'Replied',
+      'proposal':     'Interested',
+      'negotiation':  'Negotiation',
+      'won':          'Won',
+      'lost':         'Lost',
+    };
+
+    updateOpportunity(draggableId, {
+      status: stageToStatus[newStage]
+    });
+  }, [updateOpportunity]);
 
   /* ── Update deal (from drawer) ─────────────────────────────── */
   const handleUpdateDeal = useCallback((id, updates) => {
-    setDeals(prev => prev.map(d => (d.id === id ? { ...d, ...updates } : d)));
+    const oppUpdates = { ...updates };
+    if (updates.stage) {
+      const stageToStatus = {
+        'prospecting':  'Open',
+        'qualification':'Replied',
+        'proposal':     'Interested',
+        'negotiation':  'Negotiation',
+        'won':          'Won',
+        'lost':         'Lost',
+      };
+      oppUpdates.status = stageToStatus[updates.stage];
+      delete oppUpdates.stage;
+    }
+    updateOpportunity(id, oppUpdates);
     setSelectedDeal(prev => (prev?.id === id ? { ...prev, ...updates } : prev));
-  }, []);
+  }, [updateOpportunity]);
 
   /* ── Inject topbar actions ─────────────────────────────────── */
   useEffect(() => {
@@ -374,7 +438,7 @@ export default function SalesPipeline() {
             <KanbanColumn
               key={stage.id}
               stage={stage}
-              deals={deals.filter(d => d.stage === stage.id)}
+              deals={kanbanDeals.filter(d => d.stage === stage.id)}
               onCardClick={setSelectedDeal}
             />
           ))}

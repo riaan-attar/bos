@@ -292,6 +292,7 @@ export default function OpportunitySidebar({ opportunity, isEditing, onUpdate })
         {/* Status badge */}
         <div style={{ marginTop: '8px', display: 'flex', justifyContent: 'center' }}>
           <span
+            title={!isEditing ? "Click Edit to change status" : ""}
             onClick={handleStatusClick}
             style={{
               ...statusStyle,
