@@ -151,9 +151,11 @@ export default function DealHeader({ deal, isEditing, onEdit, onSave, onDelete, 
           <button
             onClick={() => updateOpportunity(deal.id, { status: 'Open', stage: 'Qualification' })}
             style={{
-              background: 'transparent', border: '1px solid #2b2b2b', color: '#7c7c7c',
-              borderRadius: '6px', padding: '4px 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer'
+              background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-muted)',
+              borderRadius: '6px', padding: '4px 12px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', transition: 'all 0.2s'
             }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--surface-gray-2)'; e.currentTarget.style.color = 'var(--text-color)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; }}
           >
             <RefreshCw size={12} /> Reopen
           </button>
@@ -162,23 +164,23 @@ export default function DealHeader({ deal, isEditing, onEdit, onSave, onDelete, 
             <button
               onClick={onMarkLost}
               style={{
-                background: 'transparent', border: '1px solid #2b2b2b', borderRadius: '6px',
-                padding: '4px 12px', fontSize: '12px', color: '#6b6b6b', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer'
+                background: 'transparent', border: '1px solid var(--border-color)', borderRadius: '6px',
+                padding: '4px 12px', fontSize: '12px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', transition: 'all 0.2s'
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#e03636'; e.currentTarget.style.color = '#e03636'; e.currentTarget.style.background = '#1a0808'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#2b2b2b'; e.currentTarget.style.color = '#6b6b6b'; e.currentTarget.style.background = 'transparent'; }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--danger)'; e.currentTarget.style.color = 'var(--danger)'; e.currentTarget.style.background = '#fef2f2'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'transparent'; }}
             >
               <XCircle size={12} /> Mark as Lost
             </button>
             <button
               onClick={onMarkWon}
               style={{
-                background: '#173b2c', border: '1px solid #1a4a2e', borderRadius: '6px',
-                padding: '4px 12px', fontSize: '12px', fontWeight: 500, color: '#28a745',
-                display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer'
+                background: '#ecfdf5', border: '1px solid #d1fae5', borderRadius: '6px',
+                padding: '4px 12px', fontSize: '12px', fontWeight: 500, color: '#166534',
+                display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', transition: 'all 0.2s'
               }}
-              onMouseEnter={e => e.currentTarget.style.background = '#1e5235'}
-              onMouseLeave={e => e.currentTarget.style.background = '#173b2c'}
+              onMouseEnter={e => { e.currentTarget.style.background = '#d1fae5'; e.currentTarget.style.borderColor = '#a7f3d0'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#ecfdf5'; e.currentTarget.style.borderColor = '#d1fae5'; }}
             >
               <Trophy size={12} /> Mark as Won
             </button>

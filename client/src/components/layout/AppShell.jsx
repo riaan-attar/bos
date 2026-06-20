@@ -3,9 +3,11 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '../sidebar/Sidebar';
 import Topbar from './Topbar';
 import { TopbarProvider } from '../../context/TopbarContext';
+import NotificationDrawer from './NotificationDrawer';
 
 export default function AppShell() {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const location = useLocation();
 
   const hideTopbarPatterns = [
@@ -18,7 +20,11 @@ export default function AppShell() {
   return (
     <TopbarProvider>
       <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-        <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+        <Sidebar 
+          isCollapsed={isCollapsed} 
+          setIsCollapsed={setIsCollapsed} 
+          onOpenNotifications={() => setIsNotificationsOpen(true)}
+        />
 
         <div
           style={{
@@ -45,6 +51,11 @@ export default function AppShell() {
             <Outlet />
           </main>
         </div>
+        
+        <NotificationDrawer 
+          isOpen={isNotificationsOpen} 
+          onClose={() => setIsNotificationsOpen(false)} 
+        />
       </div>
     </TopbarProvider>
   );

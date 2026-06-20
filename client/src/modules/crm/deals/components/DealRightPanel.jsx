@@ -125,31 +125,31 @@ export default function DealRightPanel({ deal, isEditing, onUpdate }) {
       </div>
 
       {/* DEAL AMOUNT */}
-      <div style={{ marginTop: '16px', textAlign: 'center', padding: '14px', background: '#171717', border: '1px solid #1c1c1c', borderRadius: '8px', marginBottom: '16px' }}>
-        <div style={{ fontSize: '10px', color: '#424242', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Deal Value</div>
+      <div style={{ marginTop: '16px', textAlign: 'center', padding: '14px', background: 'var(--surface-gray-1)', border: '1px solid var(--border-color)', borderRadius: '8px', marginBottom: '16px' }}>
+        <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>Deal Value</div>
         {isEditing ? (
           <input
             type="number"
             value={deal?.amount || ''}
             onChange={e => onUpdate('amount', e.target.value)}
-            style={{ marginTop: '4px', background: '#232323', border: '1px solid #343434', borderRadius: '5px', padding: '4px 8px', fontSize: '14px', color: '#f8f8f8', width: '100px', textAlign: 'center', outline: 'none' }}
+            style={{ marginTop: '6px', background: 'var(--bg-color)', border: '1px solid var(--border-color)', borderRadius: '5px', padding: '6px 8px', fontSize: '14px', color: 'var(--text-color)', width: '100px', textAlign: 'center', outline: 'none' }}
           />
         ) : (
-          <div style={{ fontSize: '26px', fontWeight: 700, color: '#f8f8f8', marginTop: '4px' }}>
+          <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--heading-color)', marginTop: '4px' }}>
             {deal?.amount ? `₹${Number(deal.amount).toLocaleString('en-IN')}` : '₹0'}
           </div>
         )}
-        {won && <div style={{ fontSize: '11px', color: '#28a745', marginTop: '4px' }}>Won on {deal?.closeDate}</div>}
+        {won && <div style={{ fontSize: '11px', color: 'var(--success)', marginTop: '4px', fontWeight: 500 }}>Won on {deal?.closeDate}</div>}
       </div>
 
       {/* STAGE PROGRESS BAR */}
-      <div style={{ marginBottom: '16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#383838', marginBottom: '6px' }}>
+      <div style={{ marginBottom: '16px', padding: '0 4px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-muted)', marginBottom: '8px', fontWeight: 500 }}>
           <span>Qualification</span>
           <span>Close</span>
         </div>
-        <div style={{ height: '3px', background: '#1c1c1c', borderRadius: '2px', overflow: 'hidden' }}>
-          <div style={{ width: `${progress.pct}%`, height: '100%', background: progress.color, transition: 'all 0.3s' }} />
+        <div style={{ height: '4px', background: 'var(--surface-gray-3)', borderRadius: '2px', overflow: 'hidden' }}>
+          <div style={{ width: `${progress.pct}%`, height: '100%', background: progress.color, transition: 'all 0.4s ease' }} />
         </div>
       </div>
 

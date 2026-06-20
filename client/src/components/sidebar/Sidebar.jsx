@@ -30,7 +30,7 @@ function SidebarSectionLabel({ label, isOpen, onToggle, isCollapsed }) {
   );
 }
 
-export default function Sidebar({ isCollapsed, setIsCollapsed }) {
+export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotifications }) {
   const [crmOpen, setCrmOpen] = useState(true);
   const [publicViewsOpen, setPublicViewsOpen] = useState(true);
   const [pinnedViewsOpen, setPinnedViewsOpen] = useState(true);
@@ -81,7 +81,12 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
           }}
         >
           {SIDEBAR_CONFIG.main.map(item => (
-            <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
+            <SidebarNavItem 
+              key={item.key} 
+              item={item} 
+              isCollapsed={isCollapsed} 
+              onClick={item.key === 'notifications' ? onOpenNotifications : undefined}
+            />
           ))}
         </div>
 
