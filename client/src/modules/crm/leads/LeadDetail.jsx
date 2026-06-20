@@ -6,6 +6,7 @@ import { Activity, Mail, Phone, CheckSquare, StickyNote, MessageCircle } from 'l
 
 import LeadHeader from './components/LeadHeader';
 import LeadRightPanel from './components/LeadRightPanel';
+import ConvertToDealModal from './components/modals/ConvertToDealModal';
 import ActivityTab from './components/tabs/ActivityTab';
 import EmailsTab from './components/tabs/EmailsTab';
 import CallsTab from './components/tabs/CallsTab';
@@ -25,6 +26,7 @@ export default function LeadDetail() {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
   const [activities, setActivities] = useState([]);
+  const [showConvertModal, setShowConvertModal] = useState(false);
 
   useEffect(() => {
     if (lead) setEditData({ ...lead });
@@ -52,7 +54,7 @@ export default function LeadDetail() {
     }
   };
 
-  const handleConvert = () => {
+  const handleConvert = (options = {}) => {
     const existing = opportunities.find(o => o.linkedLeadId === lead.id);
     if (existing) {
       navigate(`/crm/deals/${existing.id}`);
@@ -62,8 +64,10 @@ export default function LeadDetail() {
       id: `OPP-${String(opportunities.length + 1).padStart(4, '0')}`,
       title: `${lead.propertyType || 'Property'} - ${lead.firstName} ${lead.lastName}`,
       opportunityFrom: 'Lead',
-      party: `${lead.firstName} ${lead.lastName}`,
+      party: options.selectedContact || `${lead.firstName} ${lead.lastName}`,
+      organization: options.selectedOrg || lead.organization || '',
       status: 'Open',
+      stage: 'Qualification',
       amount: 0,
       propertyType: lead.propertyType || '',
       preferredArea: lead.preferredArea || '',
@@ -75,7 +79,7 @@ export default function LeadDetail() {
       createdOn: new Date().toLocaleDateString('en-IN'),
     };
     addOpportunity(newDeal);
-    updateLead(id, { status: 'Converted' });
+    updateLead(lead.id, { status: 'Converted' });
     addActivity('status', `Converted to Deal ${newDeal.id}`);
     navigate(`/crm/deals/${newDeal.id}`);
   };
@@ -111,7 +115,7 @@ export default function LeadDetail() {
         onEdit={() => setIsEditing(true)}
         onSave={handleSave}
         onDelete={handleDelete}
-        onConvert={handleConvert}
+        onConvert={() => setShowConvertModal(true)}
         updateLead={updateLead}
       />
       
@@ -168,6 +172,15 @@ export default function LeadDetail() {
         />
         
       </div>
+      
+      <ConvertToDealModal
+        isOpen={showConvertModal}
+        onClose={() => setShowConvertModal(false)}
+        lead={lead}
+        onConvert={(options) => {
+          handleConvert(options);
+        }}
+      />
     </div>
   );
 }
