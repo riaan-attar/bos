@@ -19,6 +19,12 @@ import CommunicationList from './modules/crm/communications/CommunicationList';
 import CampaignList from './modules/crm/campaigns/CampaignList';
 import ErpDashboard from './modules/erp';
 import SettingsDashboard from './modules/settings';
+import OrganizationList from './modules/crm/organizations/OrganizationList';
+import OrganizationDetail from './modules/crm/organizations/OrganizationDetail';
+import NotesPage from './modules/crm/notes/NotesPage';
+import TasksPage from './modules/crm/tasks/TasksPage';
+import CallLogsPage from './modules/crm/calllogs/CallLogsPage';
+import EmailTemplatesPage from './modules/crm/emailtemplates/EmailTemplatesPage';
 import { LeadsProvider } from './context/LeadsContext';
 import { OpportunitiesProvider } from './context/OpportunitiesContext';
 import { CustomersProvider } from './context/CustomersContext';
@@ -27,6 +33,11 @@ import { MaintenanceProvider } from './context/MaintenanceContext';
 import { ContractsProvider } from './context/ContractsContext';
 import { CommunicationsProvider } from './context/CommunicationsContext';
 import { CampaignsProvider } from './context/CampaignsContext';
+import { OrganizationsProvider } from './context/OrganizationsContext';
+import { NotesProvider } from './context/NotesContext';
+import { TasksProvider } from './context/TasksContext';
+import { CallLogsProvider } from './context/CallLogsContext';
+import { EmailTemplatesProvider } from './context/EmailTemplatesContext';
 
 const Placeholder = ({ title }) => (
   <div style={{
@@ -56,7 +67,12 @@ export default function App() {
           <ContractsProvider>
             <CommunicationsProvider>
               <CampaignsProvider>
-                <BrowserRouter>
+                <OrganizationsProvider>
+                <NotesProvider>
+                <TasksProvider>
+                <CallLogsProvider>
+                <EmailTemplatesProvider>
+                  <BrowserRouter>
                   <Routes>
                     <Route path="/" element={<AppShell />}>
                       {/* Default redirect to CRM */}
@@ -78,11 +94,12 @@ export default function App() {
                       <Route path="crm/campaigns" element={<CampaignList />} />
                       
                       {/* Placeholders */}
-                      <Route path="crm/organizations" element={<Placeholder title="Organizations" />} />
-                      <Route path="crm/notes" element={<Placeholder title="Notes" />} />
-                      <Route path="crm/tasks" element={<Placeholder title="Tasks" />} />
-                      <Route path="crm/call-logs" element={<Placeholder title="Call Logs" />} />
-                      <Route path="crm/email-templates" element={<Placeholder title="Email Templates" />} />
+                      <Route path="crm/organizations" element={<OrganizationList />} />
+                      <Route path="crm/organizations/:id" element={<OrganizationDetail />} />
+                      <Route path="crm/notes" element={<NotesPage />} />
+                      <Route path="crm/tasks" element={<TasksPage />} />
+                      <Route path="crm/call-logs" element={<CallLogsPage />} />
+                      <Route path="crm/email-templates" element={<EmailTemplatesPage />} />
                       <Route path="crm/incoming-calls" element={<Placeholder title="Incoming Calls" />} />
                       <Route path="notifications" element={<Placeholder title="Notifications" />} />
 
@@ -91,7 +108,12 @@ export default function App() {
                       <Route path="settings/*" element={<SettingsDashboard />} />
                     </Route>
                   </Routes>
-                </BrowserRouter>
+                  </BrowserRouter>
+                </EmailTemplatesProvider>
+                </CallLogsProvider>
+                </TasksProvider>
+                </NotesProvider>
+                </OrganizationsProvider>
               </CampaignsProvider>
             </CommunicationsProvider>
           </ContractsProvider>
