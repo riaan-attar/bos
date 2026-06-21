@@ -11,15 +11,11 @@ export default function SidebarNavItem({ item, isCollapsed, onClick }) {
 
   const Wrapper = onClick ? 'div' : NavLink;
   
-  // If we have an onClick, it's not a real route link, so it's not "active" in the routing sense.
-  // We can just rely on the click behavior.
-  const isRouteActive = !onClick && location.pathname.startsWith(routePath) && 
-    (item.route.includes('?') ? location.search === `?${item.route.split('?')[1]}` : true);
-
   const wrapperProps = onClick 
     ? { onClick }
     : {
         to: item.route,
+        end: item.route === '/crm' || item.route === '/crm/',
         className: ({ isActive }) => isActive ? 'active' : ''
       };
 
@@ -105,18 +101,14 @@ export default function SidebarNavItem({ item, isCollapsed, onClick }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={({ isActive }) => {
-        const active = location.pathname.startsWith(routePath) && 
-          (item.route.includes('?') ? location.search === `?${item.route.split('?')[1]}` : true);
         return {
           ...styleObj,
-          background: active ? '#1c1c1c' : hovered ? '#171717' : 'transparent',
+          background: isActive ? '#1c1c1c' : hovered ? '#171717' : 'transparent',
         };
       }}
     >
       {({ isActive }) => {
-        const active = location.pathname.startsWith(routePath) && 
-          (item.route.includes('?') ? location.search === `?${item.route.split('?')[1]}` : true);
-        return renderContent(active);
+        return renderContent(isActive);
       }}
     </NavLink>
   );

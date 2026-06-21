@@ -67,6 +67,16 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotificatio
           padding: '4px 0',
         }}
       >
+        {/* Notifications placed outside the CRM collapsible folder */}
+        {SIDEBAR_CONFIG.main.filter(item => item.key === 'notifications').map(item => (
+          <SidebarNavItem 
+            key={item.key} 
+            item={item} 
+            isCollapsed={isCollapsed} 
+            onClick={onOpenNotifications}
+          />
+        ))}
+
         <SidebarSectionLabel
           label="CRM"
           isOpen={crmOpen}
@@ -80,12 +90,11 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotificatio
             transition: 'max-height 0.2s ease',
           }}
         >
-          {SIDEBAR_CONFIG.main.map(item => (
+          {SIDEBAR_CONFIG.main.filter(item => item.key !== 'notifications').map(item => (
             <SidebarNavItem 
               key={item.key} 
               item={item} 
               isCollapsed={isCollapsed} 
-              onClick={item.key === 'notifications' ? onOpenNotifications : undefined}
             />
           ))}
         </div>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { socket } from '../utils/socket';
 
 const LeadsContext = createContext(null);
-const API_URL = 'http://localhost:5000/api/crm/leads';
+const API_URL = `${import.meta.env.VITE_API_URL}/api/crm/leads`;
 
 const DEMO_LEADS = [
   {

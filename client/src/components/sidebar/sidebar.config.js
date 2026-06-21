@@ -8,6 +8,12 @@ export const SIDEBAR_CONFIG = {
       badge: 7,
     },
     {
+      key: 'dashboard',
+      label: 'Dashboard',
+      icon: 'LayoutDashboard',
+      route: '/crm',
+    },
+    {
       key: 'leads',
       label: 'Leads',
       icon: 'Users',

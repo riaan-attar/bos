@@ -52,9 +52,6 @@ export default function SidebarBrand({ isCollapsed, onToggleCollapse }) {
             <span style={{ fontSize: '14px', fontWeight: 600, color: '#f8f8f8', whiteSpace: 'nowrap' }}>
               BOS
             </span>
-            <span style={{ fontSize: '11px', color: '#424242', marginTop: '1px', whiteSpace: 'nowrap' }}>
-              Avenue Builders
-            </span>
           </div>
         )}
       </Link>
