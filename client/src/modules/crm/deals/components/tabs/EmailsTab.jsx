@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Mail, Plus, MessageCircle, Bold, Italic, List, ListOrdered, 
   AlignLeft, AlignCenter, AlignRight, AlignJustify, Type, Image as ImageIcon, 
-  Video, Link2, Quote, Code, Minus, Table, Paperclip, Heading2, X 
+  Video, Link2, Quote, Code, Minus, Table, Paperclip, Heading2, X, ChevronDown
 } from 'lucide-react';
 import { useLeads } from '../../../../../context/LeadsContext';
+import { useEmailTemplates } from '../../../../../context/EmailTemplatesContext';
 
 export default function EmailsTab({ deal, activities, onAddActivity }) {
   const { leads } = useLeads();
+  const { templates } = useEmailTemplates();
+  const [showTemplateMenu, setShowTemplateMenu] = useState(false);
+  const editorRef = useRef(null);
+
   const contact = leads.find(l => l.id === deal?.linkedLeadId);
   const contactEmail = contact?.email || '';
 
@@ -29,6 +34,37 @@ export default function EmailsTab({ deal, activities, onAddActivity }) {
 
   const [subjectValue, setSubjectValue] = useState(defaultSubject);
   const [bodyValue, setBodyValue] = useState('');
+
+  // Sync state to contentEditable div
+  useEffect(() => {
+    if (editorRef.current && editorRef.current.innerHTML !== bodyValue) {
+      editorRef.current.innerHTML = bodyValue;
+    }
+  }, [bodyValue]);
+
+  const handleSelectTemplate = (tmpl) => {
+    let parsedSubject = tmpl.subject;
+    let parsedBody = tmpl.body;
+
+    const replacements = {
+      lead_name: `${contact?.firstName || ''} ${contact?.lastName || ''}`.trim() || 'Valued Customer',
+      owner_name: contact?.assignedTo || 'Amit Kulkarni',
+      property_name: contact?.propertyType || deal?.propertyType || 'our premium property',
+      visit_date: contact?.followUpDate || new Date(Date.now() + 86400000).toLocaleDateString('en-IN'),
+      property_address: contact?.preferredArea || 'Gangapur Road Project Site',
+      customer_name: deal?.party || `${contact?.firstName || ''} ${contact?.lastName || ''}`.trim() || 'Valued Customer'
+    };
+
+    Object.entries(replacements).forEach(([key, val]) => {
+      const regex = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+      parsedSubject = parsedSubject.replace(regex, val);
+      parsedBody = parsedBody.replace(regex, val);
+    });
+
+    setSubjectValue(parsedSubject);
+    setBodyValue(parsedBody);
+    setShowTemplateMenu(false);
+  };
 
   const emails = activities?.filter(a => a.type === 'email') || [];
 
@@ -118,6 +154,42 @@ export default function EmailsTab({ deal, activities, onAddActivity }) {
             <button style={{ background: 'transparent', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '5px 12px', fontSize: '13px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
               <MessageCircle size={13} /> Comment
             </button>
+            {/* Templates Selector */}
+            <div style={{ position: 'relative' }}>
+              <button 
+                onClick={() => setShowTemplateMenu(!showTemplateMenu)}
+                style={{ 
+                  background: 'transparent', border: '1px solid #e5e7eb', borderRadius: '6px', 
+                  padding: '5px 12px', fontSize: '13px', color: '#6b7280', display: 'flex', 
+                  alignItems: 'center', gap: '6px', cursor: 'pointer' 
+                }}
+              >
+                <Mail size={13} /> Template <ChevronDown size={11} />
+              </button>
+              
+              {showTemplateMenu && (
+                <div style={{ 
+                  position: 'absolute', top: '100%', left: 0, background: '#ffffff', 
+                  border: '1px solid #e5e7eb', borderRadius: '6px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', 
+                  padding: '4px', zIndex: 10, minWidth: '200px', marginTop: '4px' 
+                }}>
+                  {templates.map(tmpl => (
+                    <div 
+                      key={tmpl.id}
+                      onClick={() => handleSelectTemplate(tmpl)}
+                      style={{ 
+                        padding: '8px 12px', borderRadius: '4px', fontSize: '13px', 
+                        color: '#374151', cursor: 'pointer' 
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#f3f4f6'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                    >
+                      {tmpl.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <button onClick={() => setShowCc(true)} style={{ background: 'transparent', border: 'none', fontSize: '13px', color: '#9ca3af', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.color = '#374151'} onMouseLeave={e => e.currentTarget.style.color = '#9ca3af'}>CC</button>
               <button onClick={() => setShowBcc(true)} style={{ background: 'transparent', border: 'none', fontSize: '13px', color: '#9ca3af', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.color = '#374151'} onMouseLeave={e => e.currentTarget.style.color = '#9ca3af'}>BCC</button>
@@ -219,6 +291,7 @@ export default function EmailsTab({ deal, activities, onAddActivity }) {
             </div>
             
             <div
+              ref={editorRef}
               contentEditable
               suppressContentEditableWarning
               onInput={e => setBodyValue(e.currentTarget.innerHTML)}

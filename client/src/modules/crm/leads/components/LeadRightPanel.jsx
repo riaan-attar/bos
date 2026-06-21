@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, Mail, MessageCircle, Link as LinkIcon, ChevronDown, ChevronRight } from 'lucide-react';
 
 const avatarColors = [
@@ -8,6 +8,119 @@ const avatarColors = [
   { bg: '#e79913', color: '#ffffff' },
   { bg: '#5aaef2', color: '#ffffff' }
 ];
+
+const InlineField = ({ label, value, field, type = 'text', options = [], onUpdate }) => {
+  const [editing, setEditing] = useState(false);
+  const [localVal, setLocalVal] = useState(value || '');
+
+  useEffect(() => {
+    setLocalVal(value || '');
+  }, [value]);
+
+  const handleSave = () => {
+    setEditing(false);
+    if (localVal !== (value || '')) {
+      onUpdate(field, localVal);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSave();
+    }
+  };
+
+  if (editing) {
+    if (type === 'select') {
+      return (
+        <select
+          value={localVal}
+          onChange={e => {
+            setLocalVal(e.target.value);
+            onUpdate(field, e.target.value);
+            setEditing(false);
+          }}
+          onBlur={handleSave}
+          autoFocus
+          style={{
+            background: '#0a0a0a', border: 'none', borderBottom: '1px solid #388AE5', borderRadius: '0',
+            padding: '2px 0', fontSize: '12.5px', color: '#e2e2e2', width: '100%', outline: 'none'
+          }}
+        >
+          <option value="" style={{ background: '#0a0a0a' }}>—</option>
+          {options.map(opt => <option key={opt} value={opt} style={{ background: '#0a0a0a' }}>{opt}</option>)}
+        </select>
+      );
+    } else if (type === 'textarea') {
+      return (
+        <textarea
+          value={localVal}
+          onChange={e => setLocalVal(e.target.value)}
+          onBlur={handleSave}
+          onKeyDown={handleKeyDown}
+          autoFocus
+          rows={3}
+          style={{
+            background: '#0a0a0a', border: 'none', borderBottom: '1px solid #388AE5', borderRadius: '0',
+            padding: '2px 0', fontSize: '12.5px', color: '#e2e2e2', width: '100%', resize: 'none', outline: 'none'
+          }}
+        />
+      );
+    } else {
+      return (
+        <input
+          type={type}
+          value={localVal}
+          onChange={e => setLocalVal(e.target.value)}
+          onBlur={handleSave}
+          onKeyDown={handleKeyDown}
+          autoFocus
+          style={{
+            background: '#0a0a0a', border: 'none', borderBottom: '1px solid #388AE5', borderRadius: '0',
+            padding: '2px 0', fontSize: '12.5px', color: '#e2e2e2', width: '100%', outline: 'none'
+          }}
+        />
+      );
+    }
+  }
+
+  return (
+    <div
+      onClick={() => setEditing(true)}
+      style={{
+        cursor: 'pointer',
+        padding: '2px 6px',
+        borderRadius: '0',
+        marginLeft: '-6px',
+        borderBottom: '1px solid transparent',
+        transition: 'border-color 0.15s',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        minHeight: '22px'
+      }}
+      onMouseEnter={e => { e.currentTarget.style.borderBottomColor = 'rgba(56, 138, 229, 0.5)'; }}
+      onMouseLeave={e => { e.currentTarget.style.borderBottomColor = 'transparent'; }}
+    >
+      <div style={{ flex: 1 }}>
+        {value ? (
+          type === 'email' ? (
+            <a href={`mailto:${value}`} onClick={e => e.stopPropagation()} style={{ color: '#5aaef2', textDecoration: 'none' }} onMouseEnter={e => e.currentTarget.style.textDecoration='underline'} onMouseLeave={e => e.currentTarget.style.textDecoration='none'}>{value}</a>
+          ) : type === 'tel' ? (
+            <a href={`tel:${value}`} onClick={e => e.stopPropagation()} style={{ color: '#5aaef2', textDecoration: 'none' }} onMouseEnter={e => e.currentTarget.style.textDecoration='underline'} onMouseLeave={e => e.currentTarget.style.textDecoration='none'}>{value}</a>
+          ) : type === 'url' ? (
+            <a href={value.startsWith('http') ? value : `https://${value}`} onClick={e => e.stopPropagation()} target="_blank" rel="noreferrer" style={{ color: '#5aaef2', textDecoration: 'none' }} onMouseEnter={e => e.currentTarget.style.textDecoration='underline'} onMouseLeave={e => e.currentTarget.style.textDecoration='none'}>{value}</a>
+          ) : (
+            <span>{value}</span>
+          )
+        ) : (
+          <span style={{ color: '#383838', fontStyle: 'italic' }}>—</span>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default function LeadRightPanel({ lead, isEditing, onUpdate }) {
   const [detailsOpen, setDetailsOpen] = useState(true);
@@ -63,19 +176,14 @@ export default function LeadRightPanel({ lead, isEditing, onUpdate }) {
               />
             )
           ) : (
-            value ? (
-              type === 'email' ? (
-                <a href={`mailto:${value}`} style={{ color: '#5aaef2', textDecoration: 'none' }} onMouseEnter={e => e.currentTarget.style.textDecoration='underline'} onMouseLeave={e => e.currentTarget.style.textDecoration='none'}>{value}</a>
-              ) : type === 'tel' ? (
-                <a href={`tel:${value}`} style={{ color: '#5aaef2', textDecoration: 'none' }} onMouseEnter={e => e.currentTarget.style.textDecoration='underline'} onMouseLeave={e => e.currentTarget.style.textDecoration='none'}>{value}</a>
-              ) : type === 'url' ? (
-                <a href={value.startsWith('http') ? value : `https://${value}`} target="_blank" rel="noreferrer" style={{ color: '#5aaef2', textDecoration: 'none' }} onMouseEnter={e => e.currentTarget.style.textDecoration='underline'} onMouseLeave={e => e.currentTarget.style.textDecoration='none'}>{value}</a>
-              ) : (
-                <span>{value}</span>
-              )
-            ) : (
-              <span style={{ color: '#383838', fontStyle: 'italic' }}>—</span>
-            )
+            <InlineField
+              label={label}
+              value={value}
+              field={field}
+              type={type}
+              options={options}
+              onUpdate={onUpdate}
+            />
           )}
         </div>
       </div>

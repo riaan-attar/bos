@@ -168,7 +168,13 @@ export default function LeadDetail() {
         <LeadRightPanel
           lead={isEditing ? editData : lead}
           isEditing={isEditing}
-          onUpdate={(field, val) => setEditData(prev => ({...prev, [field]: val}))}
+          onUpdate={(field, val) => {
+            if (isEditing) {
+              setEditData(prev => ({...prev, [field]: val}));
+            } else {
+              updateLead(lead.id, { [field]: val });
+            }
+          }}
         />
         
       </div>

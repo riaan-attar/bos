@@ -27,6 +27,15 @@ export default function ActivityTab({ lead, activities, onAddActivity }) {
       default: return '#383838';
     }
   };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (comment.trim()) {
+        onAddActivity('comment', comment);
+        setComment('');
+      }
+    }
+  };
 
   return (
     <div>
@@ -37,6 +46,7 @@ export default function ActivityTab({ lead, activities, onAddActivity }) {
         <textarea
           value={comment}
           onChange={e => setComment(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Add a comment..."
           style={{
             width: '100%', background: 'transparent', border: 'none', outline: 'none',

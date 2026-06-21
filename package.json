@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:client": "cd client && npm run dev",
-    "dev:server": "cd server && npm run dev"
+    "dev:server": "cd server && npm run dev",
+    "mcp:stdio": "node mcp/index.js",
+    "mcp:sse": "node mcp/index.js --sse",
+    "cli": "node cli/index.js"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

@@ -1,12 +1,9 @@
-/**
- * LeadsContext — client/src/context/LeadsContext.jsx
- * Shared leads state so LeadList and LeadDetail can access the same data.
- * Persists to localStorage with Avenue Builders demo data on first load.
- */
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { loadFromStorage, saveToStorage } from '../utils/constants';
+import axios from 'axios';
+import { socket } from '../utils/socket';
 
 const LeadsContext = createContext(null);
+const API_URL = 'http://localhost:5000/api/crm/leads';
 
 const DEMO_LEADS = [
   {
@@ -84,7 +81,6 @@ const DEMO_LEADS = [
     budgetRange: '3Cr+',
     preferredArea: 'Trimbak Road',
     followUpDate: '2026-06-20',
-    priority: 'Urgent',
     notes: 'Wants premium penthouse. Very serious buyer.',
     assignedTo: 'Sneha Patil',
     createdOn: '08/06/2026',
@@ -112,24 +108,80 @@ const DEMO_LEADS = [
 ];
 
 export function LeadsProvider({ children }) {
-  const [leads, setLeads] = useState(() =>
-    loadFromStorage('bos_leads', DEMO_LEADS)
-  );
+  const [leads, setLeads] = useState([]);
 
+  // Fetch initial leads from API
   useEffect(() => {
-    saveToStorage('bos_leads', leads);
-  }, [leads]);
+    const fetchLeads = async () => {
+      try {
+        const response = await axios.get(API_URL);
+        setLeads(response.data);
+      } catch (err) {
+        console.error('Error fetching leads:', err);
+        setLeads(DEMO_LEADS); // fallback to demo data if backend is not reachable
+      }
+    };
+    fetchLeads();
+  }, []);
 
-  const addLead = (lead) =>
-    setLeads(prev => [lead, ...prev]);
+  // Listen to WebSocket updates
+  useEffect(() => {
+    const handleCrmUpdate = (update) => {
+      if (update.model !== 'lead') return;
 
-  const updateLead = (id, updates) =>
-    setLeads(prev =>
-      prev.map(l => (l.id === id ? { ...l, ...updates } : l))
-    );
+      setLeads((prev) => {
+        switch (update.action) {
+          case 'create':
+            if (prev.some((item) => item.id === update.data.id)) return prev;
+            return [update.data, ...prev];
+          case 'update':
+            return prev.map((item) => (item.id === update.data.id ? update.data : item));
+          case 'delete':
+            return prev.filter((item) => item.id !== update.data.id);
+          default:
+            return prev;
+        }
+      });
+    };
 
-  const deleteLead = (id) =>
-    setLeads(prev => prev.filter(l => l.id !== id));
+    socket.on('crm:update', handleCrmUpdate);
+    return () => {
+      socket.off('crm:update', handleCrmUpdate);
+    };
+  }, []);
+
+  const addLead = async (lead) => {
+    try {
+      const res = await axios.post(API_URL, lead);
+      // Local state is updated via the socket event, but we can optimistically update
+      setLeads((prev) => {
+        if (prev.some((l) => l.id === res.data.id)) return prev;
+        return [res.data, ...prev];
+      });
+    } catch (err) {
+      console.error('Error adding lead:', err);
+    }
+  };
+
+  const updateLead = async (id, updates) => {
+    try {
+      const res = await axios.put(`${API_URL}/${id}`, updates);
+      setLeads((prev) =>
+        prev.map((l) => (l.id === id ? res.data : l))
+      );
+    } catch (err) {
+      console.error('Error updating lead:', err);
+    }
+  };
+
+  const deleteLead = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      setLeads((prev) => prev.filter((l) => l.id !== id));
+    } catch (err) {
+      console.error('Error deleting lead:', err);
+    }
+  };
 
   return (
     <LeadsContext.Provider value={{ leads, setLeads, addLead, updateLead, deleteLead }}>

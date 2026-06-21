@@ -1,0 +1,17 @@
+{
+  "name": "bos-cli",
+  "version": "1.0.0",
+  "description": "CLI tool for Business Operating System (BOS)",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "bos": "./index.js"
+  },
+  "dependencies": {
+    "cli-table3": "^0.6.5",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.10.1",
+    "sequelize": "^6.37.3"
+  }
+}
