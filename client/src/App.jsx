@@ -21,6 +21,16 @@ import ErpDashboard from './modules/erp';
 import SettingsDashboard from './modules/settings';
 import OrganizationList from './modules/crm/organizations/OrganizationList';
 import OrganizationDetail from './modules/crm/organizations/OrganizationDetail';
+import Desk from './modules/desk';
+import ProjectsDashboard from './modules/projects';
+import ProjectList from './modules/projects/ProjectList';
+import ProjectDetail from './modules/projects/ProjectDetail';
+import TaskList from './modules/projects/TaskList';
+import TaskDetail from './modules/projects/TaskDetail';
+import TimesheetList from './modules/projects/TimesheetList';
+import TimesheetDetail from './modules/projects/TimesheetDetail';
+
+
 import NotesPage from './modules/crm/notes/NotesPage';
 import TasksPage from './modules/crm/tasks/TasksPage';
 import CallLogsPage from './modules/crm/calllogs/CallLogsPage';
@@ -38,6 +48,7 @@ import { NotesProvider } from './context/NotesContext';
 import { TasksProvider } from './context/TasksContext';
 import { CallLogsProvider } from './context/CallLogsContext';
 import { EmailTemplatesProvider } from './context/EmailTemplatesContext';
+import { ProjectsProvider } from './context/ProjectsContext';
 
 const Placeholder = ({ title }) => (
   <div style={{
@@ -59,6 +70,7 @@ const Placeholder = ({ title }) => (
 
 export default function App() {
   return (
+    <ProjectsProvider>
     <LeadsProvider>
       <OpportunitiesProvider>
         <ContactsProvider>
@@ -75,8 +87,8 @@ export default function App() {
                   <BrowserRouter>
                   <Routes>
                     <Route path="/" element={<AppShell />}>
-                      {/* Default redirect to CRM */}
-                      <Route index element={<Navigate to="/crm" replace />} />
+                      <Route index element={<Desk />} />
+                      <Route path="desk" element={<Desk />} />
 
                       <Route path="crm/leads/:id" element={<LeadDetail />} />
                       <Route path="crm/leads" element={<LeadList />} />
@@ -106,7 +118,31 @@ export default function App() {
                       <Route path="crm/*" element={<CrmDashboard />} />
                       <Route path="erp/*" element={<ErpDashboard />} />
                       <Route path="settings/*" element={<SettingsDashboard />} />
+                      
+                      {/* Projects Module Routes */}
+                      <Route path="projects" element={<ProjectsDashboard />} />
+                      <Route path="projects/project" element={<ProjectList />} />
+                      <Route path="projects/project/:id" element={<ProjectDetail />} />
+                      <Route path="projects/task" element={<TaskList />} />
+                      <Route path="projects/task/:id" element={<TaskDetail />} />
+                      <Route path="projects/timesheet" element={<TimesheetList />} />
+                      <Route path="projects/timesheet/:id" element={<TimesheetDetail />} />
+
+                      <Route path="projects/setup/activity-type" element={<Placeholder title="Activity Type" />} />
+                      <Route path="projects/setup/activity-cost" element={<Placeholder title="Activity Cost" />} />
+                      <Route path="projects/setup/project-template" element={<Placeholder title="Project Template" />} />
+                      <Route path="projects/setup/project-type" element={<Placeholder title="Project Type" />} />
+                      <Route path="projects/setup/project-update" element={<Placeholder title="Project Update" />} />
+                      <Route path="projects/reports/project-summary" element={<Placeholder title="Project Summary" />} />
+                      <Route path="projects/reports/daily-timesheet-summary" element={<Placeholder title="Daily Timesheet Summary" />} />
+                      <Route path="projects/reports/timesheet-billing-summary" element={<Placeholder title="Timesheet Billing Summary" />} />
+                      <Route path="projects/reports/project-wise-stock-tracking" element={<Placeholder title="Project wise Stock Tracking" />} />
+                      <Route path="projects/reports/delayed-tasks-summary" element={<Placeholder title="Delayed Tasks Summary" />} />
+                      <Route path="projects/settings" element={<Placeholder title="Projects Settings" />} />
+                      <Route path="projects/getting-started" element={<Placeholder title="Getting Started" />} />
+                      <Route path="projects/search" element={<Placeholder title="Projects Search" />} />
                     </Route>
+
                   </Routes>
                   </BrowserRouter>
                 </EmailTemplatesProvider>
@@ -122,5 +158,6 @@ export default function App() {
         </ContactsProvider>
       </OpportunitiesProvider>
     </LeadsProvider>
+    </ProjectsProvider>
   );
 }

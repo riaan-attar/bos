@@ -34,7 +34,7 @@ export default function SidebarFooter({ isCollapsed }) {
             width: '24px',
             height: '24px',
             borderRadius: '50%',
-            background: '#388AE5',
+            background: '#a352cc',
             fontSize: '10px',
             fontWeight: 600,
             color: '#ffffff',
@@ -44,17 +44,20 @@ export default function SidebarFooter({ isCollapsed }) {
             flexShrink: 0,
           }}
         >
-          AB
+          RA
         </div>
         {!isCollapsed && (
-          <>
-            <span style={{ fontSize: '12px', color: '#7c7c7c', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              Admin User
+          <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1 }}>
+            <span style={{ fontSize: '12px', fontWeight: 500, color: '#f8f8f8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.2 }}>
+              RIAAN ATTAR
             </span>
-            <Settings size={13} color="#383838" style={{ marginLeft: 'auto', flexShrink: 0 }} />
-          </>
+            <span style={{ fontSize: '10px', color: '#7c7c7c', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.1 }}>
+              attarriaan6226@gmail.com
+            </span>
+          </div>
         )}
       </div>
+
 
       {!isCollapsed && (
         <div

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import SidebarBrand from './SidebarBrand';
 import SidebarNavItem from './SidebarNavItem';
 import SidebarFooter from './SidebarFooter';
-import { SIDEBAR_CONFIG } from './sidebar.config';
+import { SIDEBAR_CONFIG, PROJECTS_SIDEBAR_CONFIG } from './sidebar.config';
 
 function SidebarSectionLabel({ label, isOpen, onToggle, isCollapsed }) {
   if (isCollapsed) return null;
@@ -31,9 +32,16 @@ function SidebarSectionLabel({ label, isOpen, onToggle, isCollapsed }) {
 }
 
 export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotifications }) {
+  const location = useLocation();
+  const isProjects = location.pathname.startsWith('/projects');
+
   const [crmOpen, setCrmOpen] = useState(true);
   const [publicViewsOpen, setPublicViewsOpen] = useState(true);
   const [pinnedViewsOpen, setPinnedViewsOpen] = useState(true);
+
+  // Projects collapsible states
+  const [setupOpen, setSetupOpen] = useState(true);
+  const [reportsOpen, setReportsOpen] = useState(true);
 
   return (
     <aside
@@ -67,76 +75,177 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotificatio
           padding: '4px 0',
         }}
       >
-        {/* Notifications placed outside the CRM collapsible folder */}
-        {SIDEBAR_CONFIG.main.filter(item => item.key === 'notifications').map(item => (
-          <SidebarNavItem 
-            key={item.key} 
-            item={item} 
-            isCollapsed={isCollapsed} 
-            onClick={onOpenNotifications}
-          />
-        ))}
+        {isProjects ? (
+          // ─── PROJECTS SIDEBAR ──────────────────────────────────────────────
+          <>
+            {/* Search (if present in config, but rendered as NavLink) */}
+            {PROJECTS_SIDEBAR_CONFIG.main.filter(item => item.key === 'search').map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+              />
+            ))}
 
-        <SidebarSectionLabel
-          label="CRM"
-          isOpen={crmOpen}
-          onToggle={() => setCrmOpen(p => !p)}
-          isCollapsed={isCollapsed}
-        />
-        <div
-          style={{
-            maxHeight: crmOpen ? '800px' : '0',
-            overflow: 'hidden',
-            transition: 'max-height 0.2s ease',
-          }}
-        >
-          {SIDEBAR_CONFIG.main.filter(item => item.key !== 'notifications').map(item => (
-            <SidebarNavItem 
-              key={item.key} 
-              item={item} 
-              isCollapsed={isCollapsed} 
+            {/* Notifications outside setup/reports collapsible folder */}
+            {PROJECTS_SIDEBAR_CONFIG.main.filter(item => item.key === 'notifications').map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+                onClick={onOpenNotifications}
+              />
+            ))}
+
+            {/* Other main links: Dashboard, Project, Task, Timesheet */}
+            {PROJECTS_SIDEBAR_CONFIG.main.filter(item => item.key !== 'notifications' && item.key !== 'search').map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+              />
+            ))}
+
+            {/* Setup Group Accordion */}
+            <SidebarSectionLabel
+              label="Setup"
+              isOpen={setupOpen}
+              onToggle={() => setSetupOpen(p => !p)}
+              isCollapsed={isCollapsed}
             />
-          ))}
-        </div>
+            <div
+              style={{
+                maxHeight: setupOpen ? '500px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {PROJECTS_SIDEBAR_CONFIG.setup.map(item => (
+                <SidebarNavItem 
+                  key={item.key} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                />
+              ))}
+            </div>
 
-        <SidebarSectionLabel
-          label="Public Views"
-          isOpen={publicViewsOpen}
-          onToggle={() => setPublicViewsOpen(p => !p)}
-          isCollapsed={isCollapsed}
-        />
-        <div
-          style={{
-            maxHeight: publicViewsOpen ? '500px' : '0',
-            overflow: 'hidden',
-            transition: 'max-height 0.2s ease',
-          }}
-        >
-          {SIDEBAR_CONFIG.publicViews.map(item => (
-            <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
-          ))}
-        </div>
+            {/* Reports Group Accordion */}
+            <SidebarSectionLabel
+              label="Reports"
+              isOpen={reportsOpen}
+              onToggle={() => setReportsOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div
+              style={{
+                maxHeight: reportsOpen ? '500px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {PROJECTS_SIDEBAR_CONFIG.reports.map(item => (
+                <SidebarNavItem 
+                  key={item.key} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                />
+              ))}
+            </div>
 
-        <SidebarSectionLabel
-          label="Pinned Views"
-          isOpen={pinnedViewsOpen}
-          onToggle={() => setPinnedViewsOpen(p => !p)}
-          isCollapsed={isCollapsed}
-        />
-        <div
-          style={{
-            maxHeight: pinnedViewsOpen ? '500px' : '0',
-            overflow: 'hidden',
-            transition: 'max-height 0.2s ease',
-          }}
-        >
-          {SIDEBAR_CONFIG.pinnedViews.map(item => (
-            <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
-          ))}
-        </div>
+            {/* Settings Link */}
+            {PROJECTS_SIDEBAR_CONFIG.settings.map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+              />
+            ))}
+
+            {/* Getting Started Link */}
+            {PROJECTS_SIDEBAR_CONFIG.footer.map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+              />
+            ))}
+          </>
+        ) : (
+          // ─── CRM SIDEBAR (DEFAULT) ────────────────────────────────────────
+          <>
+            {/* Notifications placed outside the CRM collapsible folder */}
+            {SIDEBAR_CONFIG.main.filter(item => item.key === 'notifications').map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+                onClick={onOpenNotifications}
+              />
+            ))}
+
+            <SidebarSectionLabel
+              label="CRM"
+              isOpen={crmOpen}
+              onToggle={() => setCrmOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div
+              style={{
+                maxHeight: crmOpen ? '800px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {SIDEBAR_CONFIG.main.filter(item => item.key !== 'notifications').map(item => (
+                <SidebarNavItem 
+                  key={item.key} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                />
+              ))}
+            </div>
+
+            <SidebarSectionLabel
+              label="Public Views"
+              isOpen={publicViewsOpen}
+              onToggle={() => setPublicViewsOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div
+              style={{
+                maxHeight: publicViewsOpen ? '500px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {SIDEBAR_CONFIG.publicViews.map(item => (
+                <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
+              ))}
+            </div>
+
+            <SidebarSectionLabel
+              label="Pinned Views"
+              isOpen={pinnedViewsOpen}
+              onToggle={() => setPinnedViewsOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div
+              style={{
+                maxHeight: pinnedViewsOpen ? '500px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {SIDEBAR_CONFIG.pinnedViews.map(item => (
+                <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <SidebarFooter isCollapsed={isCollapsed} />
     </aside>
   );
 }
+

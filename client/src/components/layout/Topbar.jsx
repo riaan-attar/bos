@@ -27,7 +27,19 @@ const formatLabel = (segment) => {
     purchase: 'Purchase',
     assets: 'Assets',
     projects: 'Projects',
+    'activity-type': 'Activity Type',
+    'activity-cost': 'Activity Cost',
+    'project-template': 'Project Template',
+    'project-type': 'Project Type',
+    'project-update': 'Project Update',
+    'project-summary': 'Project Summary',
+    'daily-timesheet-summary': 'Daily Timesheet Summary',
+    'timesheet-billing-summary': 'Timesheet Billing Summary',
+    'project-wise-stock-tracking': 'Project wise Stock Tracking',
+    'delayed-tasks-summary': 'Delayed Tasks Summary',
+    'getting-started': 'Getting Started',
   };
+
   return map[segment] || segment.charAt(0).toUpperCase() + segment.slice(1);
 };
 
@@ -57,11 +69,17 @@ export default function Topbar() {
     >
       {/* ── Breadcrumb ─────────────────────────────────────────── */}
       <nav style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: '#7c7c7c' }}>
-        <Home size={14} style={{ color: '#7c7c7c' }} />
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', color: '#7c7c7c', textDecoration: 'none' }}>
+          <Home size={14} style={{ color: '#7c7c7c' }} />
+        </Link>
 
         {/* Static "Dashboard" crumb */}
         {sep}
-        <span style={{ color: '#7c7c7c', fontSize: '13px' }}>Dashboard</span>
+        <Link to="/" style={{ color: '#7c7c7c', fontSize: '13px', textDecoration: 'none' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#afafaf')}
+              onMouseLeave={e => (e.currentTarget.style.color = '#7c7c7c')}>
+          Dashboard
+        </Link>
 
         {/* Dynamic path segments */}
         {pathSegments.map((segment, index) => {

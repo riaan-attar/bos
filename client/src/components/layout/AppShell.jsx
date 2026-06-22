@@ -10,25 +10,29 @@ export default function AppShell() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const location = useLocation();
 
+  const isDesk = location.pathname === '/' || location.pathname === '/desk';
+
   const hideTopbarPatterns = [
     /^\/crm\/leads\/[^/]+$/,
     /^\/crm\/deals\/[^/]+$/,
   ];
   
-  const shouldHideTopbar = hideTopbarPatterns.some(pattern => pattern.test(location.pathname));
+  const shouldHideTopbar = isDesk || hideTopbarPatterns.some(pattern => pattern.test(location.pathname));
 
   return (
     <TopbarProvider>
       <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-        <Sidebar 
-          isCollapsed={isCollapsed} 
-          setIsCollapsed={setIsCollapsed} 
-          onOpenNotifications={() => setIsNotificationsOpen(true)}
-        />
+        {!isDesk && (
+          <Sidebar 
+            isCollapsed={isCollapsed} 
+            setIsCollapsed={setIsCollapsed} 
+            onOpenNotifications={() => setIsNotificationsOpen(true)}
+          />
+        )}
 
         <div
           style={{
-            marginLeft: isCollapsed ? '48px' : '220px',
+            marginLeft: isDesk ? '0px' : (isCollapsed ? '48px' : '220px'),
             transition: 'margin-left 0.2s ease',
             flex: 1,
             display: 'flex',
@@ -55,7 +59,7 @@ export default function AppShell() {
         <NotificationDrawer 
           isOpen={isNotificationsOpen} 
           onClose={() => setIsNotificationsOpen(false)} 
-        />
+          />
       </div>
     </TopbarProvider>
   );

@@ -112,7 +112,7 @@ body {
     background-color: #ffffff !important;
 }
 
-/* Main Backgrounds (#0f0f0f, #0a0a0a, #171717, #1a1a1a, #232323) -> White */
+/* Main Backgrounds (#0f0f0f, #0a0a0a, #171717, #1a1a1a, #232323, #141414) -> White */
 [style*="background: rgb(15, 15, 15)"], [style*="background-color: rgb(15, 15, 15)"],
 [style*="background: #0f0f0f"], [style*="background-color: #0f0f0f"],
 [style*="background: rgb(10, 10, 10)"], [style*="background-color: rgb(10, 10, 10)"],
@@ -122,10 +122,13 @@ body {
 [style*="background: rgb(26, 26, 26)"], [style*="background-color: rgb(26, 26, 26)"],
 [style*="background: #1a1a1a"], [style*="background-color: #1a1a1a"],
 [style*="background: rgb(35, 35, 35)"], [style*="background-color: rgb(35, 35, 35)"],
-[style*="background: #232323"], [style*="background-color: #232323"] {
+[style*="background: #232323"], [style*="background-color: #232323"],
+[style*="background: rgb(20, 20, 20)"], [style*="background-color: rgb(20, 20, 20)"],
+[style*="background: #141414"], [style*="background-color: #141414"] {
     background: #ffffff !important;
     background-color: #ffffff !important;
 }
+
 
 /* Row Hovers vs Primary Buttons (#111111 / rgb(17, 17, 17)) */
 div[style*="background: rgb(17, 17, 17)"], div[style*="background-color: rgb(17, 17, 17)"],

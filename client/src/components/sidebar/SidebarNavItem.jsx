@@ -104,6 +104,7 @@ export default function SidebarNavItem({ item, isCollapsed, onClick }) {
         return {
           ...styleObj,
           background: isActive ? '#1c1c1c' : hovered ? '#171717' : 'transparent',
+          border: isActive ? '1px solid #1a1a1a' : '1px solid transparent',
         };
       }}
     >

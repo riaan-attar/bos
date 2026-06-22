@@ -1,8 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { ChevronLeft, ChevronDown, Folder } from 'lucide-react';
 
 export default function SidebarBrand({ isCollapsed, onToggleCollapse }) {
+  const location = useLocation();
+  const isProjects = location.pathname.startsWith('/projects');
+
   return (
     <div
       style={{
@@ -18,7 +21,7 @@ export default function SidebarBrand({ isCollapsed, onToggleCollapse }) {
       }}
     >
       <Link
-        to="/"
+        to={isProjects ? "/projects" : "/"}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -28,30 +31,55 @@ export default function SidebarBrand({ isCollapsed, onToggleCollapse }) {
           flex: 1,
         }}
       >
-        <div
-          style={{
-            width: '28px',
-            height: '28px',
-            backgroundColor: '#171717',
-            border: '1px solid #2b2b2b',
-            borderRadius: '6px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '13px',
-            fontWeight: 700,
-            color: '#f8f8f8',
-            flexShrink: 0,
-          }}
-        >
-          B
-        </div>
+        {isProjects ? (
+          <div
+            style={{
+              width: '28px',
+              height: '28px',
+              backgroundColor: '#0289f7',
+              borderRadius: '6px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <Folder size={15} color="#ffffff" />
+          </div>
+        ) : (
+          <div
+            style={{
+              width: '28px',
+              height: '28px',
+              backgroundColor: '#171717',
+              border: '1px solid #2b2b2b',
+              borderRadius: '6px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '13px',
+              fontWeight: 700,
+              color: '#f8f8f8',
+              flexShrink: 0,
+            }}
+          >
+            B
+          </div>
+        )}
 
         {!isCollapsed && (
-          <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            <span style={{ fontSize: '14px', fontWeight: 600, color: '#f8f8f8', whiteSpace: 'nowrap' }}>
-              BOS
-            </span>
+          <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ fontSize: '14px', fontWeight: 600, color: '#f8f8f8', whiteSpace: 'nowrap' }}>
+                {isProjects ? 'Projects' : 'BOS'}
+              </span>
+              {isProjects && <ChevronDown size={12} color="#7c7c7c" style={{ marginTop: '2px' }} />}
+            </div>
+            {isProjects && (
+              <span style={{ fontSize: '11px', color: '#7c7c7c', whiteSpace: 'nowrap', marginTop: '-2px' }}>
+                ERPNext
+              </span>
+            )}
           </div>
         )}
       </Link>
@@ -86,3 +114,4 @@ export default function SidebarBrand({ isCollapsed, onToggleCollapse }) {
     </div>
   );
 }
+
