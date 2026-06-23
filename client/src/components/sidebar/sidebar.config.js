@@ -91,18 +91,13 @@ export const SIDEBAR_CONFIG = {
 export const PROJECTS_SIDEBAR_CONFIG = {
   main: [
     {
-      key: 'search',
-      label: 'Search',
-      icon: 'Search',
-      route: '/projects/search',
-      shortcut: 'Ctrl+K',
-    },
-    {
       key: 'notifications',
       label: 'Notification',
       icon: 'Bell',
       route: '/notifications',
     },
+  ],
+  erp: [
     {
       key: 'dashboard',
       label: 'Dashboard',

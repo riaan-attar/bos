@@ -183,8 +183,10 @@ export function LeadsProvider({ children }) {
     }
   };
 
+  const safeLeads = Array.isArray(leads) ? leads : [];
+
   return (
-    <LeadsContext.Provider value={{ leads, setLeads, addLead, updateLead, deleteLead }}>
+    <LeadsContext.Provider value={{ leads: safeLeads, setLeads, addLead, updateLead, deleteLead }}>
       {children}
     </LeadsContext.Provider>
   );

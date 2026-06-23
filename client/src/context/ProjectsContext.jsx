@@ -237,17 +237,21 @@ export function ProjectsProvider({ children }) {
     }
   };
 
+  const safeProjects = Array.isArray(projects) ? projects : [];
+  const safeProjectTasks = Array.isArray(projectTasks) ? projectTasks : [];
+  const safeTimesheets = Array.isArray(timesheets) ? timesheets : [];
+
   return (
     <ProjectsContext.Provider value={{ 
-      projects, 
+      projects: safeProjects, 
       addProject, 
       updateProject, 
       deleteProject,
-      projectTasks,
+      projectTasks: safeProjectTasks,
       addProjectTask,
       updateProjectTask,
       deleteProjectTask,
-      timesheets,
+      timesheets: safeTimesheets,
       addTimesheet,
       updateTimesheet,
       deleteTimesheet

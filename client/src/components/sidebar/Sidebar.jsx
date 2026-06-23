@@ -40,6 +40,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotificatio
   const [pinnedViewsOpen, setPinnedViewsOpen] = useState(true);
 
   // Projects collapsible states
+  const [erpOpen, setErpOpen] = useState(true);
   const [setupOpen, setSetupOpen] = useState(true);
   const [reportsOpen, setReportsOpen] = useState(true);
 
@@ -97,14 +98,28 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotificatio
               />
             ))}
 
-            {/* Other main links: Dashboard, Project, Task, Timesheet */}
-            {PROJECTS_SIDEBAR_CONFIG.main.filter(item => item.key !== 'notifications' && item.key !== 'search').map(item => (
-              <SidebarNavItem 
-                key={item.key} 
-                item={item} 
-                isCollapsed={isCollapsed} 
-              />
-            ))}
+            {/* ERP Group Accordion */}
+            <SidebarSectionLabel
+              label="ERP"
+              isOpen={erpOpen}
+              onToggle={() => setErpOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div
+              style={{
+                maxHeight: erpOpen ? '500px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {PROJECTS_SIDEBAR_CONFIG.erp.map(item => (
+                <SidebarNavItem 
+                  key={item.key} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                />
+              ))}
+            </div>
 
             {/* Setup Group Accordion */}
             <SidebarSectionLabel

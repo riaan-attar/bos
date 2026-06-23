@@ -182,20 +182,8 @@ export default function TimesheetDetail() {
       
       {/* ─── Breadcrumbs & Actions ─── */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: 'var(--text-muted, #6b7280)' }}>
-          <Link to="/projects" style={{ display: 'flex', alignItems: 'center', color: 'var(--text-muted, #6b7280)', textDecoration: 'none' }}>
-            <Home size={15} style={{ marginRight: '6px' }} />
-            Projects
-          </Link>
-          <ChevronRight size={14} style={{ color: 'var(--border-color, #e5e7eb)' }} />
-          <Link to="/projects/timesheet" style={{ color: 'var(--text-muted, #6b7280)', textDecoration: 'none' }}>
-            Timesheet
-          </Link>
-          <ChevronRight size={14} style={{ color: 'var(--border-color, #e5e7eb)' }} />
-          <span style={{ color: 'var(--text-color, #1a1a1a)', fontWeight: 500 }}>{isNew ? 'New Timesheet' : id}</span>
-          
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ 
-            marginLeft: '12px',
             backgroundColor: isSaved ? '#f0fdf4' : '#fff7ed',
             color: isSaved ? '#15803d' : '#b45309',
             padding: '2px 8px', 

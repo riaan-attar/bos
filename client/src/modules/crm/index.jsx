@@ -73,18 +73,23 @@ function StatCardsRow() {
   const thisMonth = new Date().getMonth();
   const thisYear = new Date().getFullYear();
 
-  const newLeadsThisMonth = leads.filter(l => {
+  const safeLeads = Array.isArray(leads) ? leads : [];
+  const safeOpps = Array.isArray(opportunities) ? opportunities : [];
+
+  const newLeadsThisMonth = safeLeads.filter(l => {
+    if (!l.createdOn) return false;
     const d = new Date(l.createdOn.split('/').reverse().join('-'));
     return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
   }).length;
 
-  const newOppsThisMonth = opportunities.filter(o => {
+  const newOppsThisMonth = safeOpps.filter(o => {
+    if (!o.createdOn) return false;
     const d = new Date(o.createdOn.split('/').reverse().join('-'));
     return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
   }).length;
 
-  const wonOpps = opportunities.filter(o => o.status === 'Won').length;
-  const openOpps = opportunities.filter(
+  const wonOpps = safeOpps.filter(o => o.status === 'Won').length;
+  const openOpps = safeOpps.filter(
     o => !['Won', 'Lost'].includes(o.status)
   ).length;
 

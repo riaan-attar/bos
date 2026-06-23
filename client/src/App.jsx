@@ -30,6 +30,25 @@ import TaskDetail from './modules/projects/TaskDetail';
 import TimesheetList from './modules/projects/TimesheetList';
 import TimesheetDetail from './modules/projects/TimesheetDetail';
 
+// Project Setup
+import ActivityType from './modules/projects/setup/ActivityType';
+import ActivityCost from './modules/projects/setup/ActivityCost';
+import ProjectTemplate from './modules/projects/setup/ProjectTemplate';
+import ProjectType from './modules/projects/setup/ProjectType';
+import ProjectUpdate from './modules/projects/setup/ProjectUpdate';
+
+// Project Reports
+import ProjectSummary from './modules/projects/reports/ProjectSummary';
+import DailyTimesheetSummary from './modules/projects/reports/DailyTimesheetSummary';
+import TimesheetBillingSummary from './modules/projects/reports/TimesheetBillingSummary';
+import ProjectWiseStock from './modules/projects/reports/ProjectWiseStock';
+import DelayedTasksSummary from './modules/projects/reports/DelayedTasksSummary';
+
+// Project Utils
+import ProjectsSearch from './modules/projects/ProjectsSearch';
+import ProjectsSettings from './modules/projects/ProjectsSettings';
+import GettingStarted from './modules/projects/GettingStarted';
+
 
 import NotesPage from './modules/crm/notes/NotesPage';
 import TasksPage from './modules/crm/tasks/TasksPage';
@@ -128,19 +147,19 @@ export default function App() {
                       <Route path="projects/timesheet" element={<TimesheetList />} />
                       <Route path="projects/timesheet/:id" element={<TimesheetDetail />} />
 
-                      <Route path="projects/setup/activity-type" element={<Placeholder title="Activity Type" />} />
-                      <Route path="projects/setup/activity-cost" element={<Placeholder title="Activity Cost" />} />
-                      <Route path="projects/setup/project-template" element={<Placeholder title="Project Template" />} />
-                      <Route path="projects/setup/project-type" element={<Placeholder title="Project Type" />} />
-                      <Route path="projects/setup/project-update" element={<Placeholder title="Project Update" />} />
-                      <Route path="projects/reports/project-summary" element={<Placeholder title="Project Summary" />} />
-                      <Route path="projects/reports/daily-timesheet-summary" element={<Placeholder title="Daily Timesheet Summary" />} />
-                      <Route path="projects/reports/timesheet-billing-summary" element={<Placeholder title="Timesheet Billing Summary" />} />
-                      <Route path="projects/reports/project-wise-stock-tracking" element={<Placeholder title="Project wise Stock Tracking" />} />
-                      <Route path="projects/reports/delayed-tasks-summary" element={<Placeholder title="Delayed Tasks Summary" />} />
-                      <Route path="projects/settings" element={<Placeholder title="Projects Settings" />} />
-                      <Route path="projects/getting-started" element={<Placeholder title="Getting Started" />} />
-                      <Route path="projects/search" element={<Placeholder title="Projects Search" />} />
+                      <Route path="projects/setup/activity-type" element={<ActivityType />} />
+                      <Route path="projects/setup/activity-cost" element={<ActivityCost />} />
+                      <Route path="projects/setup/project-template" element={<ProjectTemplate />} />
+                      <Route path="projects/setup/project-type" element={<ProjectType />} />
+                      <Route path="projects/setup/project-update" element={<ProjectUpdate />} />
+                      <Route path="projects/reports/project-summary" element={<ProjectSummary />} />
+                      <Route path="projects/reports/daily-timesheet-summary" element={<DailyTimesheetSummary />} />
+                      <Route path="projects/reports/timesheet-billing-summary" element={<TimesheetBillingSummary />} />
+                      <Route path="projects/reports/project-wise-stock-tracking" element={<ProjectWiseStock />} />
+                      <Route path="projects/reports/delayed-tasks-summary" element={<DelayedTasksSummary />} />
+                      <Route path="projects/settings" element={<ProjectsSettings />} />
+                      <Route path="projects/getting-started" element={<GettingStarted />} />
+                      <Route path="projects/search" element={<ProjectsSearch />} />
                     </Route>
 
                   </Routes>
