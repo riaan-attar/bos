@@ -205,3 +205,139 @@ export const PROJECTS_SIDEBAR_CONFIG = {
   ],
 };
 
+export const STOCK_SIDEBAR_CONFIG = {
+  main: [
+    {
+      key: 'notifications',
+      label: 'Notifications',
+      icon: 'Bell',
+      route: '/notifications',
+    },
+  ],
+  erp: [
+    {
+      key: 'dashboard',
+      label: 'Dashboard',
+      icon: 'LayoutDashboard',
+      route: '/stock/dashboard',
+    },
+    {
+      key: 'stockEntry',
+      label: 'Stock Entry',
+      icon: 'PackagePlus',
+      route: '/stock/stock-entry',
+    },
+    {
+      key: 'purchaseReceipt',
+      label: 'Purchase Receipt',
+      icon: 'Receipt',
+      route: '/stock/purchase-receipt',
+    },
+    {
+      key: 'deliveryNote',
+      label: 'Delivery Note',
+      icon: 'Truck',
+      route: '/stock/delivery-note',
+    },
+    {
+      key: 'materialRequest',
+      label: 'Material Request',
+      icon: 'ClipboardList',
+      route: '/stock/material-request',
+    },
+    {
+      key: 'pickList',
+      label: 'Pick List',
+      icon: 'ListChecks',
+      route: '/stock/pick-list',
+    },
+  ],
+  tools: [
+    {
+      key: 'serialNo',
+      label: 'Serial No',
+      icon: 'Hash',
+      route: '/stock/tools/serial-no',
+    },
+    {
+      key: 'batch',
+      label: 'Batch',
+      icon: 'Layers',
+      route: '/stock/tools/batch',
+    },
+    {
+      key: 'qualityInspection',
+      label: 'Quality Inspection',
+      icon: 'CheckSquare',
+      route: '/stock/tools/quality',
+    },
+  ],
+  setup: [
+    {
+      key: 'warehouse',
+      label: 'Warehouse',
+      icon: 'Building',
+      route: '/stock/setup/warehouse',
+    },
+    {
+      key: 'item',
+      label: 'Item',
+      icon: 'Box',
+      route: '/stock/setup/item',
+    },
+    {
+      key: 'itemGroup',
+      label: 'Item Group',
+      icon: 'FolderTree',
+      route: '/stock/setup/item-group',
+    },
+    {
+      key: 'uom',
+      label: 'Unit of Measure',
+      icon: 'Scale',
+      route: '/stock/setup/uom',
+    },
+  ],
+  reports: [
+    {
+      key: 'stockLedger',
+      label: 'Stock Ledger',
+      icon: 'BookOpen',
+      route: '/stock/reports/stock-ledger',
+    },
+    {
+      key: 'stockBalance',
+      label: 'Stock Balance',
+      icon: 'BarChart2',
+      route: '/stock/reports/stock-balance',
+    },
+    {
+      key: 'warehouseWiseStock',
+      label: 'Warehouse-wise Stock',
+      icon: 'PieChart',
+      route: '/stock/reports/warehouse-wise-stock',
+    },
+    {
+      key: 'itemPrices',
+      label: 'Item Prices',
+      icon: 'DollarSign',
+      route: '/stock/reports/item-prices',
+    },
+  ],
+  settings: [
+    {
+      key: 'stockSettings',
+      label: 'Stock Settings',
+      icon: 'Settings',
+      route: '/stock/settings',
+    },
+  ],
+  footer: [
+    {
+      key: 'gettingStarted',
+      label: 'Getting Started',
+      icon: 'Compass',
+      route: '/stock/getting-started',
+    },
+  ],
+};

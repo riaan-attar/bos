@@ -49,6 +49,35 @@ import ProjectsSearch from './modules/projects/ProjectsSearch';
 import ProjectsSettings from './modules/projects/ProjectsSettings';
 import GettingStarted from './modules/projects/GettingStarted';
 
+// Stock Module
+import StockDashboard from './modules/stock/StockDashboard';
+import StockEntry from './modules/stock/StockEntry';
+import PurchaseReceipt from './modules/stock/PurchaseReceipt';
+import DeliveryNote from './modules/stock/DeliveryNote';
+import MaterialRequest from './modules/stock/MaterialRequest';
+import PickList from './modules/stock/PickList';
+
+// Stock Tools
+import SerialNo from './modules/stock/tools/SerialNo';
+import Batch from './modules/stock/tools/Batch';
+import QualityInspection from './modules/stock/tools/QualityInspection';
+
+// Stock Setup
+import Warehouse from './modules/stock/setup/Warehouse';
+import Item from './modules/stock/setup/Item';
+import ItemGroup from './modules/stock/setup/ItemGroup';
+import UnitOfMeasure from './modules/stock/setup/UnitOfMeasure';
+
+// Stock Reports
+import StockLedger from './modules/stock/reports/StockLedger';
+import StockBalance from './modules/stock/reports/StockBalance';
+import WarehouseWiseStock from './modules/stock/reports/WarehouseWiseStock';
+import ItemPrices from './modules/stock/reports/ItemPrices';
+
+// Stock Settings & Utils
+import StockSettings from './modules/stock/StockSettings';
+import StockGettingStarted from './modules/stock/StockGettingStarted';
+
 
 import NotesPage from './modules/crm/notes/NotesPage';
 import TasksPage from './modules/crm/tasks/TasksPage';
@@ -160,6 +189,32 @@ export default function App() {
                       <Route path="projects/settings" element={<ProjectsSettings />} />
                       <Route path="projects/getting-started" element={<GettingStarted />} />
                       <Route path="projects/search" element={<ProjectsSearch />} />
+                      
+                      {/* Stock Module Routes */}
+                      <Route path="stock" element={<StockDashboard />} />
+                      <Route path="stock/dashboard" element={<StockDashboard />} />
+                      <Route path="stock/stock-entry" element={<StockEntry />} />
+                      <Route path="stock/purchase-receipt" element={<PurchaseReceipt />} />
+                      <Route path="stock/delivery-note" element={<DeliveryNote />} />
+                      <Route path="stock/material-request" element={<MaterialRequest />} />
+                      <Route path="stock/pick-list" element={<PickList />} />
+
+                      <Route path="stock/tools/serial-no" element={<SerialNo />} />
+                      <Route path="stock/tools/batch" element={<Batch />} />
+                      <Route path="stock/tools/quality" element={<QualityInspection />} />
+
+                      <Route path="stock/setup/warehouse" element={<Warehouse />} />
+                      <Route path="stock/setup/item" element={<Item />} />
+                      <Route path="stock/setup/item-group" element={<ItemGroup />} />
+                      <Route path="stock/setup/uom" element={<UnitOfMeasure />} />
+
+                      <Route path="stock/reports/stock-ledger" element={<StockLedger />} />
+                      <Route path="stock/reports/stock-balance" element={<StockBalance />} />
+                      <Route path="stock/reports/warehouse-wise-stock" element={<WarehouseWiseStock />} />
+                      <Route path="stock/reports/item-prices" element={<ItemPrices />} />
+
+                      <Route path="stock/settings" element={<StockSettings />} />
+                      <Route path="stock/getting-started" element={<StockGettingStarted />} />
                     </Route>
 
                   </Routes>

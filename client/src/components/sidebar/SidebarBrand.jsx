@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronLeft, ChevronDown, Folder } from 'lucide-react';
+import { ChevronLeft, ChevronDown, Folder, Package } from 'lucide-react';
 
 export default function SidebarBrand({ isCollapsed, onToggleCollapse }) {
   const location = useLocation();
   const isProjects = location.pathname.startsWith('/projects');
+  const isStock = location.pathname.startsWith('/stock');
 
   return (
     <div
@@ -21,7 +22,7 @@ export default function SidebarBrand({ isCollapsed, onToggleCollapse }) {
       }}
     >
       <Link
-        to={isProjects ? "/projects" : "/"}
+        to={isProjects ? "/projects" : isStock ? "/stock" : "/"}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -45,6 +46,21 @@ export default function SidebarBrand({ isCollapsed, onToggleCollapse }) {
             }}
           >
             <Folder size={15} color="#ffffff" />
+          </div>
+        ) : isStock ? (
+           <div
+            style={{
+              width: '28px',
+              height: '28px',
+              backgroundColor: '#e879a0',
+              borderRadius: '6px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <Package size={15} color="#ffffff" />
           </div>
         ) : (
           <div
@@ -71,11 +87,11 @@ export default function SidebarBrand({ isCollapsed, onToggleCollapse }) {
           <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span style={{ fontSize: '14px', fontWeight: 600, color: '#f8f8f8', whiteSpace: 'nowrap' }}>
-                {isProjects ? 'Projects' : 'BOS'}
+                {isProjects ? 'Projects' : isStock ? 'Stock' : 'BOS'}
               </span>
-              {isProjects && <ChevronDown size={12} color="#7c7c7c" style={{ marginTop: '2px' }} />}
+              {(isProjects || isStock) && <ChevronDown size={12} color="#7c7c7c" style={{ marginTop: '2px' }} />}
             </div>
-            {isProjects && (
+            {(isProjects || isStock) && (
               <span style={{ fontSize: '11px', color: '#7c7c7c', whiteSpace: 'nowrap', marginTop: '-2px' }}>
                 ERPNext
               </span>

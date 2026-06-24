@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bell, Users, Box, Briefcase } from 'lucide-react';
+import { Search, Bell, Users, Box, Briefcase, Package } from 'lucide-react';
 
 export default function Desk() {
   const navigate = useNavigate();
@@ -11,6 +11,10 @@ export default function Desk() {
 
   const handleProjectsClick = () => {
     navigate('/projects');
+  };
+
+  const handleStockClick = () => {
+    navigate('/stock');
   };
 
 
@@ -281,6 +285,52 @@ export default function Desk() {
                 }}
               >
                 Projects
+              </span>
+            </div>
+
+            {/* Stock Module Card */}
+            <div
+              onClick={handleStockClick}
+              className="group"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              <div
+                style={{
+                  width: '72px',
+                  height: '72px',
+                  backgroundColor: '#e879a0',
+                  borderRadius: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(232, 121, 160, 0.2)',
+                  marginBottom: '10px',
+                  transition: 'background-color 0.2s ease',
+                }}
+              >
+                <Package size={32} color="#ffffff" strokeWidth={1.5} />
+              </div>
+              <span
+                style={{
+                  fontSize: '13px',
+                  fontWeight: '500',
+                  color: '#1a1a1a',
+                  textAlign: 'center',
+                }}
+              >
+                Stock
               </span>
             </div>
 

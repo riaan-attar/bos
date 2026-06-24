@@ -4,7 +4,7 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import SidebarBrand from './SidebarBrand';
 import SidebarNavItem from './SidebarNavItem';
 import SidebarFooter from './SidebarFooter';
-import { SIDEBAR_CONFIG, PROJECTS_SIDEBAR_CONFIG } from './sidebar.config';
+import { SIDEBAR_CONFIG, PROJECTS_SIDEBAR_CONFIG, STOCK_SIDEBAR_CONFIG } from './sidebar.config';
 
 function SidebarSectionLabel({ label, isOpen, onToggle, isCollapsed }) {
   if (isCollapsed) return null;
@@ -34,6 +34,7 @@ function SidebarSectionLabel({ label, isOpen, onToggle, isCollapsed }) {
 export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotifications }) {
   const location = useLocation();
   const isProjects = location.pathname.startsWith('/projects');
+  const isStock = location.pathname.startsWith('/stock');
 
   const [crmOpen, setCrmOpen] = useState(true);
   const [publicViewsOpen, setPublicViewsOpen] = useState(true);
@@ -43,6 +44,12 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotificatio
   const [erpOpen, setErpOpen] = useState(true);
   const [setupOpen, setSetupOpen] = useState(true);
   const [reportsOpen, setReportsOpen] = useState(true);
+
+  // Stock collapsible states
+  const [stockErpOpen, setStockErpOpen] = useState(true);
+  const [stockToolsOpen, setStockToolsOpen] = useState(true);
+  const [stockSetupOpen, setStockSetupOpen] = useState(true);
+  const [stockReportsOpen, setStockReportsOpen] = useState(true);
 
   return (
     <aside
@@ -178,6 +185,122 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotificatio
 
             {/* Getting Started Link */}
             {PROJECTS_SIDEBAR_CONFIG.footer.map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+              />
+            ))}
+          </>
+        ) : isStock ? (
+          // ─── STOCK SIDEBAR ──────────────────────────────────────────────
+          <>
+            {STOCK_SIDEBAR_CONFIG.main.map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+                onClick={item.key === 'notifications' ? onOpenNotifications : undefined}
+              />
+            ))}
+
+            <SidebarSectionLabel
+              label="Stock"
+              isOpen={stockErpOpen}
+              onToggle={() => setStockErpOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div
+              style={{
+                maxHeight: stockErpOpen ? '500px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {STOCK_SIDEBAR_CONFIG.erp.map(item => (
+                <SidebarNavItem 
+                  key={item.key} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                />
+              ))}
+            </div>
+
+            <SidebarSectionLabel
+              label="Tools"
+              isOpen={stockToolsOpen}
+              onToggle={() => setStockToolsOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div
+              style={{
+                maxHeight: stockToolsOpen ? '500px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {STOCK_SIDEBAR_CONFIG.tools.map(item => (
+                <SidebarNavItem 
+                  key={item.key} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                />
+              ))}
+            </div>
+
+            <SidebarSectionLabel
+              label="Setup"
+              isOpen={stockSetupOpen}
+              onToggle={() => setStockSetupOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div
+              style={{
+                maxHeight: stockSetupOpen ? '500px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {STOCK_SIDEBAR_CONFIG.setup.map(item => (
+                <SidebarNavItem 
+                  key={item.key} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                />
+              ))}
+            </div>
+
+            <SidebarSectionLabel
+              label="Reports"
+              isOpen={stockReportsOpen}
+              onToggle={() => setStockReportsOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div
+              style={{
+                maxHeight: stockReportsOpen ? '500px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {STOCK_SIDEBAR_CONFIG.reports.map(item => (
+                <SidebarNavItem 
+                  key={item.key} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                />
+              ))}
+            </div>
+
+            {STOCK_SIDEBAR_CONFIG.settings.map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+              />
+            ))}
+
+            {STOCK_SIDEBAR_CONFIG.footer.map(item => (
               <SidebarNavItem 
                 key={item.key} 
                 item={item} 
