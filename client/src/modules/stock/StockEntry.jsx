@@ -5,80 +5,7 @@ import { warehousesApi, itemsApi } from '../../services/stockApi';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_STOCK_ENTRIES = [
-  {
-    id: 'STE-2026-00001',
-    stockEntryType: 'Material Transfer',
-    fromWarehouse: 'Main Warehouse - BID',
-    toWarehouse: 'Gangapur Site Store',
-    totalValue: 85000,
-    postingDate: '10/06/2026',
-    status: 'Submitted',
-  },
-  {
-    id: 'STE-2026-00002',
-    stockEntryType: 'Material Issue',
-    fromWarehouse: 'Gangapur Site Store',
-    toWarehouse: '—',
-    totalValue: 42000,
-    postingDate: '12/06/2026',
-    status: 'Submitted',
-  },
-  {
-    id: 'STE-2026-00003',
-    stockEntryType: 'Material Receipt',
-    fromWarehouse: '—',
-    toWarehouse: 'Main Warehouse - BID',
-    totalValue: 156000,
-    postingDate: '14/06/2026',
-    status: 'Submitted',
-  },
-  {
-    id: 'STE-2026-00004',
-    stockEntryType: 'Material Transfer',
-    fromWarehouse: 'Main Warehouse - BID',
-    toWarehouse: 'Nashik Road Store',
-    totalValue: 63000,
-    postingDate: '15/06/2026',
-    status: 'Submitted',
-  },
-  {
-    id: 'STE-2026-00005',
-    stockEntryType: 'Stock Reconciliation',
-    fromWarehouse: '—',
-    toWarehouse: 'Satpur Site Store',
-    totalValue: 28000,
-    postingDate: '16/06/2026',
-    status: 'Draft',
-  },
-  {
-    id: 'STE-2026-00006',
-    stockEntryType: 'Material Issue',
-    fromWarehouse: 'Nashik Road Store',
-    toWarehouse: '—',
-    totalValue: 18500,
-    postingDate: '17/06/2026',
-    status: 'Draft',
-  },
-  {
-    id: 'STE-2026-00007',
-    stockEntryType: 'Material Transfer',
-    fromWarehouse: 'Gangapur Site Store',
-    toWarehouse: 'Main Warehouse - BID',
-    totalValue: 12000,
-    postingDate: '18/06/2026',
-    status: 'Submitted',
-  },
-  {
-    id: 'STE-2026-00008',
-    stockEntryType: 'Material Receipt',
-    fromWarehouse: '—',
-    toWarehouse: 'Gangapur Site Store',
-    totalValue: 95000,
-    postingDate: '19/06/2026',
-    status: 'Draft',
-  },
-];
+const FALLBACK_STOCK_ENTRIES = [];
 
 const mapItem = (item) => ({
   id: item.id || item._id || item.name,
@@ -149,7 +76,7 @@ export default function StockEntry() {
       if (fetchedItems.length > 0) {
         setStockEntries(fetchedItems.map(mapItem));
       } else {
-        console.log('No data from API, using fallback');
+        console.log('No data from API');
         setStockEntries(FALLBACK_STOCK_ENTRIES);
       }
       

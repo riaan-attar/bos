@@ -4,18 +4,7 @@ import { Plus, X, AlertTriangle, LayoutList, MoreHorizontal, RefreshCw, Filter, 
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_DATA = [
-  { id: 'ITEM-001', itemCode: 'ITEM-001', itemName: 'Portland Cement', itemGroup: 'Construction Material', uom: 'Bag', rate: 380, currentStock: 180, reorderLevel: 100, warehouse: 'Gangapur Site Store' },
-  { id: 'ITEM-002', itemCode: 'ITEM-002', itemName: 'Steel TMT Bars 12mm', itemGroup: 'Steel', uom: 'KG', rate: 65, currentStock: 2200, reorderLevel: 1000, warehouse: 'Gangapur Site Store' },
-  { id: 'ITEM-003', itemCode: 'ITEM-003', itemName: 'Red Clay Bricks', itemGroup: 'Construction Material', uom: 'Nos', rate: 8, currentStock: 18000, reorderLevel: 10000, warehouse: 'Nashik Road Store' },
-  { id: 'ITEM-004', itemCode: 'ITEM-004', itemName: 'River Sand', itemGroup: 'Aggregates', uom: 'CFT', rate: 45, currentStock: 750, reorderLevel: 500, warehouse: 'Satpur Site Store' },
-  { id: 'ITEM-005', itemCode: 'ITEM-005', itemName: 'Ceramic Floor Tiles', itemGroup: 'Finishing', uom: 'SqFt', rate: 55, currentStock: 3200, reorderLevel: 1000, warehouse: 'Nashik Road Store' },
-  { id: 'ITEM-006', itemCode: 'ITEM-006', itemName: 'PVC Pipes 4 inch', itemGroup: 'Plumbing', uom: 'Nos', rate: 320, currentStock: 45, reorderLevel: 50, warehouse: 'Gangapur Site Store' },
-  { id: 'ITEM-007', itemCode: 'ITEM-007', itemName: 'Electrical Wire 4mm', itemGroup: 'Electrical', uom: 'Mtr', rate: 28, currentStock: 1800, reorderLevel: 500, warehouse: 'Main Warehouse - BID' },
-  { id: 'ITEM-008', itemCode: 'ITEM-008', itemName: 'Granite Slabs', itemGroup: 'Finishing', uom: 'SqFt', rate: 120, currentStock: 1100, reorderLevel: 500, warehouse: 'Main Warehouse - BID' },
-  { id: 'ITEM-009', itemCode: 'ITEM-009', itemName: 'Paint - Exterior', itemGroup: 'Finishing', uom: 'Litre', rate: 180, currentStock: 320, reorderLevel: 200, warehouse: 'Nashik Road Store' },
-  { id: 'ITEM-010', itemCode: 'ITEM-010', itemName: 'Plywood 19mm', itemGroup: 'Wood & Timber', uom: 'Sheet', rate: 1800, currentStock: 95, reorderLevel: 50, warehouse: 'Main Warehouse - BID' },
-];
+const FALLBACK_DATA = [];
 
 const ITEM_GROUPS = ['Construction Material', 'Steel', 'Aggregates', 'Finishing', 'Plumbing', 'Electrical', 'Wood & Timber'];
 const UOMS = ['Bag', 'KG', 'Nos', 'CFT', 'SqFt', 'Mtr', 'Litre', 'Sheet'];
@@ -85,7 +74,7 @@ export default function Item() {
       if (fetchedItems.length > 0) {
         setData(fetchedItems.map(mapItem));
       } else {
-        console.log('No data from API, using fallback');
+        console.log('No data from API');
         setData(FALLBACK_DATA);
       }
       

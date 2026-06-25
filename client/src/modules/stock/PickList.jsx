@@ -5,11 +5,7 @@ import { warehousesApi, itemsApi } from '../../services/stockApi';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_PICK_LISTS = [
-  { id: 'PL-2026-00001', purpose: 'Material Issue', warehouse: 'Main Warehouse - BID', picker: 'Ramesh Singh', date: '13/06/2026', status: 'Completed' },
-  { id: 'PL-2026-00002', purpose: 'Delivery Note', warehouse: 'Nashik Road Store', picker: 'Suresh Kumar', date: '15/06/2026', status: 'Draft' },
-  { id: 'PL-2026-00003', purpose: 'Material Transfer', warehouse: 'Gangapur Site Store', picker: 'Ramesh Singh', date: '16/06/2026', status: 'Completed' },
-];
+const FALLBACK_PICK_LISTS = [];
 
 const mapItem = (item) => ({
   id: item.id || item._id || item.name,
@@ -63,7 +59,7 @@ export default function PickList() {
       if (fetchedItems.length > 0) {
         setPickLists(fetchedItems.map(mapItem));
       } else {
-        console.log('No data from API, using fallback');
+        console.log('No data from API');
         setPickLists(FALLBACK_PICK_LISTS);
       }
       

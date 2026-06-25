@@ -4,11 +4,7 @@ import { Plus, X, LayoutList, MoreHorizontal, RefreshCw, Filter, ArrowUpDown, Co
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_WAREHOUSE_DATA = [
-  { id: 'WH-001', name: 'Main Warehouse - BID', type: 'Central', city: 'Nashik', stockValue: 2450000, status: 'Active' },
-  { id: 'WH-002', name: 'Gangapur Site Store', type: 'Site', city: 'Nashik', stockValue: 850000, status: 'Active' },
-  { id: 'WH-003', name: 'Nashik Road Store', type: 'Site', city: 'Nashik', stockValue: 320000, status: 'Active' },
-];
+const FALLBACK_WAREHOUSE_DATA = [];
 
 const mapItem = (item) => ({
   id: item.id || item._id || item.name || '—',
@@ -70,7 +66,7 @@ export default function Warehouse() {
       if (fetchedItems.length > 0) {
         setData(fetchedItems.map(mapItem));
       } else {
-        console.log('No data from API, using fallback');
+        console.log('No data from API');
         setData(FALLBACK_WAREHOUSE_DATA);
       }
       

@@ -5,11 +5,7 @@ import { warehousesApi, itemsApi } from '../../services/stockApi';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_MATERIAL_REQUESTS = [
-  { id: 'MR-2026-00001', purpose: 'Material Issue', requestedBy: 'Ramesh Singh', requiredDate: '12/06/2026', status: 'Pending', totalItems: 5 },
-  { id: 'MR-2026-00002', purpose: 'Purchase', requestedBy: 'Site Manager', requiredDate: '15/06/2026', status: 'Ordered', totalItems: 12 },
-  { id: 'MR-2026-00003', purpose: 'Material Transfer', requestedBy: 'Suresh Kumar', requiredDate: '14/06/2026', status: 'Draft', totalItems: 3 },
-];
+const FALLBACK_MATERIAL_REQUESTS = [];
 
 const mapItem = (item) => ({
   id: item.id || item._id || item.name,
@@ -63,7 +59,7 @@ export default function MaterialRequest() {
       if (fetchedItems.length > 0) {
         setMaterialRequests(fetchedItems.map(mapItem));
       } else {
-        console.log('No data from API, using fallback');
+        console.log('No data from API');
         setMaterialRequests(FALLBACK_MATERIAL_REQUESTS);
       }
       

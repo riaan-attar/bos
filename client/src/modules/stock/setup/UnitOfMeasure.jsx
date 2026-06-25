@@ -4,18 +4,7 @@ import { Plus, X, LayoutList, MoreHorizontal, RefreshCw, Filter, ArrowUpDown, Co
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_UOM = [
-  { name: 'Bag', abbr: 'Bag', desc: 'Cement Bag (50kg)' },
-  { name: 'Kilogram', abbr: 'KG', desc: 'Weight in Kilograms' },
-  { name: 'Numbers', abbr: 'Nos', desc: 'Quantity in Numbers' },
-  { name: 'Cubic Feet', abbr: 'CFT', desc: 'Volume in Cubic Feet' },
-  { name: 'Square Feet', abbr: 'SqFt', desc: 'Area in Square Feet' },
-  { name: 'Litre', abbr: 'Ltr', desc: 'Volume in Litres' },
-  { name: 'Metre', abbr: 'Mtr', desc: 'Length in Metres' },
-  { name: 'Sheet', abbr: 'Sht', desc: 'Quantity in Sheets' },
-  { name: 'Metric Ton', abbr: 'MT', desc: 'Weight in Metric Tons (1000 kg)' },
-  { name: 'Ton', abbr: 'Ton', desc: 'Weight in Tons' },
-];
+const FALLBACK_UOM = [];
 
 const mapItem = (item) => ({
   name: item.name || item.uom_name || '—',
@@ -63,7 +52,7 @@ export default function UnitOfMeasure() {
       if (fetchedItems.length > 0) {
         setMockUOM(fetchedItems.map(mapItem));
       } else {
-        console.log('No data from API, using fallback');
+        console.log('No data from API');
         setMockUOM(FALLBACK_UOM);
       }
       

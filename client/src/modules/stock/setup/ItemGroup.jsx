@@ -4,16 +4,7 @@ import { Plus, X, LayoutList, MoreHorizontal, RefreshCw, Filter, ArrowUpDown, Co
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_GROUPS = [
-  { name: 'Construction Material', itemsCount: 45, desc: 'Cement, Bricks, Blocks, Sand, Aggregate' },
-  { name: 'Steel', itemsCount: 12, desc: 'TMT Bars, Structural Steel, Binding Wire' },
-  { name: 'Aggregates', itemsCount: 8, desc: 'Crushed Stone, River Sand, M-Sand' },
-  { name: 'Finishing', itemsCount: 120, desc: 'Tiles, Paint, Granite, Marble' },
-  { name: 'Plumbing', itemsCount: 85, desc: 'Pipes, Fittings, Fixtures, Pumps' },
-  { name: 'Electrical', itemsCount: 150, desc: 'Wires, Switches, Conduits, Lighting' },
-  { name: 'Wood & Timber', itemsCount: 30, desc: 'Plywood, Flush Doors, Teak Wood' },
-  { name: 'Other', itemsCount: 50, desc: 'Safety Gear, Tools, Consumables' },
-];
+const FALLBACK_GROUPS = [];
 
 const mapItem = (item) => ({
   name: item.name || item.item_group_name || '—',
@@ -61,7 +52,7 @@ export default function ItemGroup() {
       if (fetchedItems.length > 0) {
         setMockGroups(fetchedItems.map(mapItem));
       } else {
-        console.log('No data from API, using fallback');
+        console.log('No data from API');
         setMockGroups(FALLBACK_GROUPS);
       }
       

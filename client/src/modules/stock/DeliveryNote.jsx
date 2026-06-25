@@ -5,11 +5,7 @@ import { warehousesApi } from '../../services/stockApi';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_DELIVERY_NOTES = [
-  { id: 'DN-2026-00001', customer: 'L&T Constructions', items: 'Portland Cement, Steel TMT Bars', fromWarehouse: 'Main Warehouse - BID', totalAmount: 450000, date: '10/06/2026', status: 'Submitted' },
-  { id: 'DN-2026-00002', customer: 'Shree Ji Developers', items: 'Red Clay Bricks', fromWarehouse: 'Nashik Road Store', totalAmount: 85000, date: '12/06/2026', status: 'Draft' },
-  { id: 'DN-2026-00003', customer: 'Patil Builders', items: 'Electrical Wire 4mm, PVC Pipes', fromWarehouse: 'Gangapur Site Store', totalAmount: 112000, date: '14/06/2026', status: 'Submitted' },
-];
+const FALLBACK_DELIVERY_NOTES = [];
 
 const mapItem = (item) => ({
   id: item.id || item._id || item.name,
@@ -62,7 +58,7 @@ export default function DeliveryNote() {
       if (fetchedItems.length > 0) {
         setDeliveryNotes(fetchedItems.map(mapItem));
       } else {
-        console.log('No data from API, using fallback');
+        console.log('No data from API');
         setDeliveryNotes(FALLBACK_DELIVERY_NOTES);
       }
       

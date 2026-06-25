@@ -6,16 +6,11 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function SerialNo() {
   const [showModal, setShowModal] = useState(false);
-  const [mockData, setMockData] = useState([
-    { id: 'SN-001', item: 'Electric Drill', status: 'Active', warehouse: 'Gangapur Site Store', purchaseDate: '10/01/2026' },
-    { id: 'SN-002', item: 'Concrete Mixer', status: 'In Transit', warehouse: 'Transit', purchaseDate: '15/02/2026' },
-    { id: 'SN-003', item: 'Welding Machine', status: 'Inactive', warehouse: 'Main Warehouse - BID', purchaseDate: '20/03/2025' },
-    { id: 'SN-004', item: 'Power Saw', status: 'Active', warehouse: 'Nashik Road Store', purchaseDate: '05/05/2026' },
-  ]);
+  const [mockData, setMockData] = useState([]);
 
   useEffect(() => {
     axios.get(`${API_BASE}/api/stock/serial-nos`)
-      .then(res => { if (Array.isArray(res.data) && res.data.length > 0) setMockData(res.data); })
+      .then(res => { if (Array.isArray(res.data)) setMockData(res.data); else if (res.data?.data) setMockData(res.data.data); })
       .catch(() => {});
   }, []);
 

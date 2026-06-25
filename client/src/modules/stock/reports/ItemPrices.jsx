@@ -4,18 +4,7 @@ import { Download } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_DATA = [
-  { item: 'Portland Cement', itemGroup: 'Construction Material', uom: 'Bag', standardRate: 380, lastPurchaseRate: 390, priceChange: 2.6, lastUpdated: '14/06/2026' },
-  { item: 'Steel TMT Bars 12mm', itemGroup: 'Steel', uom: 'KG', standardRate: 65, lastPurchaseRate: 63, priceChange: -3.1, lastUpdated: '07/06/2026' },
-  { item: 'Red Clay Bricks', itemGroup: 'Construction Material', uom: 'Nos', standardRate: 8, lastPurchaseRate: 8, priceChange: 0, lastUpdated: '01/06/2026' },
-  { item: 'River Sand', itemGroup: 'Aggregates', uom: 'CFT', standardRate: 45, lastPurchaseRate: 48, priceChange: 6.7, lastUpdated: '09/06/2026' },
-  { item: 'Ceramic Floor Tiles', itemGroup: 'Finishing', uom: 'SqFt', standardRate: 55, lastPurchaseRate: 55, priceChange: 0, lastUpdated: '09/06/2026' },
-  { item: 'PVC Pipes 4 inch', itemGroup: 'Plumbing', uom: 'Nos', standardRate: 320, lastPurchaseRate: 310, priceChange: -3.1, lastUpdated: '05/06/2026' },
-  { item: 'Electrical Wire 4mm', itemGroup: 'Electrical', uom: 'Mtr', standardRate: 28, lastPurchaseRate: 30, priceChange: 7.1, lastUpdated: '16/06/2026' },
-  { item: 'Granite Slabs', itemGroup: 'Finishing', uom: 'SqFt', standardRate: 120, lastPurchaseRate: 115, priceChange: -4.2, lastUpdated: '10/06/2026' },
-  { item: 'Paint - Exterior', itemGroup: 'Finishing', uom: 'Litre', standardRate: 180, lastPurchaseRate: 185, priceChange: 2.8, lastUpdated: '14/06/2026' },
-  { item: 'Plywood 19mm', itemGroup: 'Wood & Timber', uom: 'Sheet', standardRate: 1800, lastPurchaseRate: 1750, priceChange: -2.8, lastUpdated: '08/06/2026' },
-];
+const FALLBACK_DATA = [];
 
 const getPriceChangeDisplay = (change) => {
   if (change > 0) return { text: `↑ +${change}%`, color: '#dc2626' };

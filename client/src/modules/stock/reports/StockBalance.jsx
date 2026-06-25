@@ -14,26 +14,9 @@ import {
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const CHART_DATA = [
-  { warehouse: 'Main WH', opening: 2000000, closing: 2150000 },
-  { warehouse: 'Gangapur', opening: 850000, closing: 980000 },
-  { warehouse: 'Nashik Rd', opening: 580000, closing: 620000 },
-  { warehouse: 'Satpur', opening: 300000, closing: 340000 },
-  { warehouse: 'Fin. Goods', opening: 420000, closing: 460000 },
-];
+const CHART_DATA = [];
 
-const FALLBACK_TABLE = [
-  { item: 'Portland Cement', uom: 'Bag', openingQty: 180, inQty: 350, outQty: 150, closingQty: 380, closingValue: 144400, warehouse: 'Gangapur Site Store' },
-  { item: 'Steel TMT Bars 12mm', uom: 'KG', openingQty: 1000, inQty: 2000, outQty: 800, closingQty: 2200, closingValue: 143000, warehouse: 'Gangapur Site Store' },
-  { item: 'Red Clay Bricks', uom: 'Nos', openingQty: 13000, inQty: 10000, outQty: 5000, closingQty: 18000, closingValue: 144000, warehouse: 'Nashik Road Store' },
-  { item: 'River Sand', uom: 'CFT', openingQty: 500, inQty: 750, outQty: 500, closingQty: 750, closingValue: 33750, warehouse: 'Satpur Site Store' },
-  { item: 'Ceramic Floor Tiles', uom: 'SqFt', openingQty: 1700, inQty: 2000, outQty: 500, closingQty: 3200, closingValue: 176000, warehouse: 'Nashik Road Store' },
-  { item: 'PVC Pipes 4 inch', uom: 'Nos', openingQty: 55, inQty: 0, outQty: 10, closingQty: 45, closingValue: 14400, warehouse: 'Gangapur Site Store' },
-  { item: 'Electrical Wire 4mm', uom: 'Mtr', openingQty: 800, inQty: 1000, outQty: 0, closingQty: 1800, closingValue: 50400, warehouse: 'Main Warehouse - BID' },
-  { item: 'Granite Slabs', uom: 'SqFt', openingQty: 1400, inQty: 0, outQty: 300, closingQty: 1100, closingValue: 132000, warehouse: 'Main Warehouse - BID' },
-  { item: 'Paint - Exterior', uom: 'Litre', openingQty: 120, inQty: 200, outQty: 0, closingQty: 320, closingValue: 57600, warehouse: 'Nashik Road Store' },
-  { item: 'Plywood 19mm', uom: 'Sheet', openingQty: 115, inQty: 0, outQty: 20, closingQty: 95, closingValue: 171000, warehouse: 'Main Warehouse - BID' },
-];
+const FALLBACK_TABLE = [];
 
 function StatCard({ title, value }) {
   return (

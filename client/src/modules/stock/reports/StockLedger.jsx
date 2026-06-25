@@ -4,26 +4,10 @@ import { Filter, Download, AlertTriangle } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_DATA = [
-  { date: '01/06/2026', item: 'Portland Cement', voucherType: 'Purchase Receipt', voucherNo: 'PRC-2026-00001', qtyIn: 200, qtyOut: 0, balanceQty: 380, rate: 380, value: 76000, warehouse: 'Gangapur Site Store' },
-  { date: '03/06/2026', item: 'Portland Cement', voucherType: 'Stock Entry', voucherNo: 'STE-2026-00002', qtyIn: 0, qtyOut: 50, balanceQty: 330, rate: 380, value: 19000, warehouse: 'Gangapur Site Store' },
-  { date: '05/06/2026', item: 'Steel TMT Bars 12mm', voucherType: 'Purchase Receipt', voucherNo: 'PRC-2026-00002', qtyIn: 2000, qtyOut: 0, balanceQty: 4200, rate: 65, value: 130000, warehouse: 'Gangapur Site Store' },
-  { date: '07/06/2026', item: 'Ceramic Floor Tiles', voucherType: 'Purchase Receipt', voucherNo: 'PRC-2026-00003', qtyIn: 2000, qtyOut: 0, balanceQty: 5200, rate: 55, value: 110000, warehouse: 'Nashik Road Store' },
-  { date: '08/06/2026', item: 'Ceramic Floor Tiles', voucherType: 'Delivery Note', voucherNo: 'DN-2026-00001', qtyIn: 0, qtyOut: 500, balanceQty: 4700, rate: 55, value: 27500, warehouse: 'Nashik Road Store' },
-  { date: '09/06/2026', item: 'River Sand', voucherType: 'Purchase Receipt', voucherNo: 'PRC-2026-00004', qtyIn: 500, qtyOut: 0, balanceQty: 1250, rate: 45, value: 22500, warehouse: 'Satpur Site Store' },
-  { date: '10/06/2026', item: 'Portland Cement', voucherType: 'Stock Entry', voucherNo: 'STE-2026-00001', qtyIn: 0, qtyOut: 100, balanceQty: 230, rate: 380, value: 38000, warehouse: 'Main Warehouse - BID' },
-  { date: '12/06/2026', item: 'Plywood 19mm', voucherType: 'Delivery Note', voucherNo: 'DN-2026-00002', qtyIn: 0, qtyOut: 20, balanceQty: 280, rate: 1800, value: 36000, warehouse: 'Main Warehouse - BID' },
-  { date: '14/06/2026', item: 'Paint - Exterior', voucherType: 'Purchase Receipt', voucherNo: 'PRC-2026-00005', qtyIn: 200, qtyOut: 0, balanceQty: 520, rate: 180, value: 36000, warehouse: 'Nashik Road Store' },
-  { date: '15/06/2026', item: 'Steel TMT Bars 12mm', voucherType: 'Stock Entry', voucherNo: 'STE-2026-00004', qtyIn: 0, qtyOut: 800, balanceQty: 3400, rate: 65, value: 52000, warehouse: 'Gangapur Site Store' },
-  { date: '16/06/2026', item: 'Electrical Wire 4mm', voucherType: 'Purchase Receipt', voucherNo: 'PRC-2026-00006', qtyIn: 1000, qtyOut: 0, balanceQty: 2800, rate: 28, value: 28000, warehouse: 'Main Warehouse - BID' },
-  { date: '17/06/2026', item: 'Granite Slabs', voucherType: 'Delivery Note', voucherNo: 'DN-2026-00003', qtyIn: 0, qtyOut: 300, balanceQty: 800, rate: 120, value: 36000, warehouse: 'Nashik Road Store' },
-  { date: '18/06/2026', item: 'PVC Pipes 4 inch', voucherType: 'Stock Entry', voucherNo: 'STE-2026-00006', qtyIn: 0, qtyOut: 10, balanceQty: 35, rate: 320, value: 3200, warehouse: 'Nashik Road Store' },
-  { date: '19/06/2026', item: 'Portland Cement', voucherType: 'Stock Entry', voucherNo: 'STE-2026-00008', qtyIn: 150, qtyOut: 0, balanceQty: 380, rate: 380, value: 57000, warehouse: 'Gangapur Site Store' },
-  { date: '20/06/2026', item: 'Red Clay Bricks', voucherType: 'Stock Entry', voucherNo: 'STE-2026-00003', qtyIn: 5000, qtyOut: 0, balanceQty: 23000, rate: 8, value: 40000, warehouse: 'Main Warehouse - BID' },
-];
+const FALLBACK_DATA = [];
 
-const FALLBACK_ITEMS = ['Portland Cement', 'Steel TMT Bars 12mm', 'Red Clay Bricks', 'River Sand', 'Ceramic Floor Tiles', 'PVC Pipes 4 inch', 'Electrical Wire 4mm', 'Granite Slabs', 'Paint - Exterior', 'Plywood 19mm'];
-const FALLBACK_WAREHOUSES = ['Main Warehouse - BID', 'Gangapur Site Store', 'Nashik Road Store', 'Satpur Site Store', 'Finished Goods - BID'];
+const FALLBACK_ITEMS = [];
+const FALLBACK_WAREHOUSES = [];
 
 export default function StockLedger() {
   const [data, setData] = useState([]);

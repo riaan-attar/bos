@@ -6,16 +6,11 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function Batch() {
   const [showModal, setShowModal] = useState(false);
-  const [mockData, setMockData] = useState([
-    { id: 'BATCH-2026-01', item: 'Portland Cement', qty: 500, mfgDate: '01/05/2026', expiry: '01/11/2026', status: 'Active' },
-    { id: 'BATCH-2026-02', item: 'Exterior Paint', qty: 200, mfgDate: '15/04/2026', expiry: '15/04/2028', status: 'Active' },
-    { id: 'BATCH-2025-11', item: 'Waterproofing Compound', qty: 50, mfgDate: '10/11/2025', expiry: '10/05/2026', status: 'Expired' },
-    { id: 'BATCH-2026-03', item: 'Adhesive', qty: 100, mfgDate: '05/06/2026', expiry: '05/06/2027', status: 'Active' },
-  ]);
+  const [mockData, setMockData] = useState([]);
 
   useEffect(() => {
     axios.get(`${API_BASE}/api/stock/batches`)
-      .then(res => { if (Array.isArray(res.data) && res.data.length > 0) setMockData(res.data); })
+      .then(res => { if (Array.isArray(res.data)) setMockData(res.data); else if (res.data?.data) setMockData(res.data.data); })
       .catch(() => {});
   }, []);
 

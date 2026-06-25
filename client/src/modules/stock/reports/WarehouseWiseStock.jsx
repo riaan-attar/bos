@@ -14,26 +14,9 @@ import {
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_WAREHOUSES = [
-  { id: 'WH-001', name: 'Main Warehouse - BID', stockValue: 2150000 },
-  { id: 'WH-002', name: 'Gangapur Site Store', stockValue: 980000 },
-  { id: 'WH-003', name: 'Nashik Road Store', stockValue: 620000 },
-  { id: 'WH-004', name: 'Satpur Site Store', stockValue: 340000 },
-  { id: 'WH-005', name: 'Finished Goods - BID', stockValue: 460000 },
-];
+const FALLBACK_WAREHOUSES = [];
 
-const FALLBACK_ITEMS = [
-  { itemName: 'Portland Cement', warehouse: 'Gangapur Site Store', uom: 'Bag', currentStock: 380, rate: 380 },
-  { itemName: 'Steel TMT Bars 12mm', warehouse: 'Gangapur Site Store', uom: 'KG', currentStock: 2200, rate: 65 },
-  { itemName: 'Red Clay Bricks', warehouse: 'Nashik Road Store', uom: 'Nos', currentStock: 18000, rate: 8 },
-  { itemName: 'River Sand', warehouse: 'Satpur Site Store', uom: 'CFT', currentStock: 750, rate: 45 },
-  { itemName: 'Ceramic Floor Tiles', warehouse: 'Nashik Road Store', uom: 'SqFt', currentStock: 3200, rate: 55 },
-  { itemName: 'PVC Pipes 4 inch', warehouse: 'Gangapur Site Store', uom: 'Nos', currentStock: 45, rate: 320 },
-  { itemName: 'Electrical Wire 4mm', warehouse: 'Main Warehouse - BID', uom: 'Mtr', currentStock: 1800, rate: 28 },
-  { itemName: 'Granite Slabs', warehouse: 'Main Warehouse - BID', uom: 'SqFt', currentStock: 1100, rate: 120 },
-  { itemName: 'Paint - Exterior', warehouse: 'Nashik Road Store', uom: 'Litre', currentStock: 320, rate: 180 },
-  { itemName: 'Plywood 19mm', warehouse: 'Main Warehouse - BID', uom: 'Sheet', currentStock: 95, rate: 1800 },
-];
+const FALLBACK_ITEMS = [];
 
 function StatCard({ title, value }) {
   return (

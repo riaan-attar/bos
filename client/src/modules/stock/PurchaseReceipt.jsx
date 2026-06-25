@@ -5,11 +5,7 @@ import { warehousesApi } from '../../services/stockApi';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-const FALLBACK_PURCHASE_RECEIPTS = [
-  { id: 'PRC-2026-00001', supplier: 'UltraTech Cement Ltd.', items: 'Portland Cement', totalQty: 500, totalAmount: 190000, date: '01/06/2026', status: 'Submitted' },
-  { id: 'PRC-2026-00002', supplier: 'Tata Steel Ltd.', items: 'Steel TMT Bars', totalQty: 2000, totalAmount: 130000, date: '05/06/2026', status: 'Submitted' },
-  { id: 'PRC-2026-00003', supplier: 'Asian Paints', items: 'Exterior Paint', totalQty: 200, totalAmount: 36000, date: '10/06/2026', status: 'Draft' },
-];
+const FALLBACK_PURCHASE_RECEIPTS = [];
 
 const mapItem = (item) => ({
   id: item.id || item._id || item.name,
@@ -62,7 +58,7 @@ export default function PurchaseReceipt() {
       if (fetchedItems.length > 0) {
         setPurchaseReceipts(fetchedItems.map(mapItem));
       } else {
-        console.log('No data from API, using fallback');
+        console.log('No data from API');
         setPurchaseReceipts(FALLBACK_PURCHASE_RECEIPTS);
       }
       
