@@ -18,6 +18,21 @@ const Project = require('./Project.model');
 const ProjectTask = require('./ProjectTask.model');
 const Timesheet = require('./Timesheet.model');
 
+// Stock Models
+const StockEntry = require('./StockEntry.model');
+const PurchaseReceipt = require('./PurchaseReceipt.model');
+const DeliveryNote = require('./DeliveryNote.model');
+const MaterialRequest = require('./MaterialRequest.model');
+const PickList = require('./PickList.model');
+const Warehouse = require('./Warehouse.model');
+const Item = require('./Item.model');
+const ItemGroup = require('./ItemGroup.model');
+const UnitOfMeasure = require('./UnitOfMeasure.model');
+const SerialNo = require('./SerialNo.model');
+const Batch = require('./Batch.model');
+const QualityInspection = require('./QualityInspection.model');
+
+
 // Define associations
 Lead.hasMany(Opportunity, { foreignKey: 'linkedLeadId', as: 'opportunities' });
 Opportunity.belongsTo(Lead, { foreignKey: 'linkedLeadId', as: 'lead' });
@@ -43,5 +58,17 @@ module.exports = {
   EmailTemplate,
   Project,
   ProjectTask,
-  Timesheet
+  Timesheet,
+  StockEntry,
+  PurchaseReceipt,
+  DeliveryNote,
+  MaterialRequest,
+  PickList,
+  Warehouse,
+  Item,
+  ItemGroup,
+  UnitOfMeasure,
+  SerialNo,
+  Batch,
+  QualityInspection
 };
