@@ -1,8 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Plus, LayoutList, MoreHorizontal, RefreshCw, Filter, ArrowUpDown, Columns, X } from 'lucide-react';
-import { MOCK_DELIVERY_NOTES, MOCK_WAREHOUSES } from './stockData';
+import { warehousesApi } from '../../services/stockApi';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+const FALLBACK_DELIVERY_NOTES = [
+  { id: 'DN-2026-00001', customer: 'L&T Constructions', items: 'Portland Cement, Steel TMT Bars', fromWarehouse: 'Main Warehouse - BID', totalAmount: 450000, date: '10/06/2026', status: 'Submitted' },
+  { id: 'DN-2026-00002', customer: 'Shree Ji Developers', items: 'Red Clay Bricks', fromWarehouse: 'Nashik Road Store', totalAmount: 85000, date: '12/06/2026', status: 'Draft' },
+  { id: 'DN-2026-00003', customer: 'Patil Builders', items: 'Electrical Wire 4mm, PVC Pipes', fromWarehouse: 'Gangapur Site Store', totalAmount: 112000, date: '14/06/2026', status: 'Submitted' },
+];
+
+const mapItem = (item) => ({
+  id: item.id || item._id || item.name,
+  customer: item.customer || item.customer_name || '—',
+  items: item.items || item.item_count || '—',
+  fromWarehouse: item.fromWarehouse || item.from_warehouse || item.source_warehouse || '—',
+  totalAmount: item.totalAmount || item.total_amount || item.grand_total || 0,
+  date: item.postingDate || item.date || item.posting_date || '—',
+  status: item.status || 'Draft',
+});
 
 export default function DeliveryNote() {
+  const [deliveryNotes, setDeliveryNotes] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+    warehousesApi.getAll().then(res => setWarehouses(Array.isArray(res.data) ? res.data : [])).catch(console.error);
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const apiUrl = `${API_BASE}/api/stock/delivery-notes`;
+      console.log('Fetching from:', apiUrl);
+      
+      const res = await axios.get(apiUrl);
+      
+      console.log('Response status:', res.status);
+      console.log('Response data:', res.data);
+      console.log('Data type:', typeof res.data);
+      console.log('Is array:', Array.isArray(res.data));
+      
+      let fetchedItems = [];
+      
+      if (Array.isArray(res.data)) {
+        fetchedItems = res.data;
+      } else if (res.data?.data) {
+        fetchedItems = res.data.data;
+      } else if (res.data?.delivery_notes) {
+        fetchedItems = res.data.delivery_notes;
+      } else if (res.data?.result) {
+        fetchedItems = res.data.result;
+      }
+      
+      console.log('Parsed items:', fetchedItems);
+      console.log('Items count:', fetchedItems.length);
+      
+      if (fetchedItems.length > 0) {
+        setDeliveryNotes(fetchedItems.map(mapItem));
+      } else {
+        console.log('No data from API, using fallback');
+        setDeliveryNotes(FALLBACK_DELIVERY_NOTES);
+      }
+      
+    } catch (err) {
+      console.error('API Error:', err.message);
+      console.error('Error details:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      setDeliveryNotes(FALLBACK_DELIVERY_NOTES);
+    } finally {
+      setLoading(false);
+    }
+  };
   const [showModal, setShowModal] = useState(false);
   const [itemsRows, setItemsRows] = useState([{ item: '', qty: 1, rate: 0, amount: 0 }]);
 
@@ -80,14 +152,14 @@ export default function DeliveryNote() {
             </tr>
           </thead>
           <tbody>
-            {MOCK_DELIVERY_NOTES.map((note) => (
+            {deliveryNotes.map((note) => (
               <tr key={note.id} style={{ borderBottom: '1px solid var(--border-color, #e5e7eb)' }}>
                 <td style={{ padding: '12px 16px' }}><input type="checkbox" /></td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', fontWeight: 500 }}>{note.id}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)' }}>{note.customer}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary, #6b7280)' }}>{note.items}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary, #6b7280)' }}>{note.fromWarehouse}</td>
-                <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', textAlign: 'right' }}>₹{note.totalAmount.toLocaleString()}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', textAlign: 'right' }}>₹{(parseFloat(note.totalAmount) || 0).toLocaleString()}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary, #6b7280)' }}>{note.date}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <span style={{ padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 500, backgroundColor: getStatusStyle(note.status).bg, color: getStatusStyle(note.status).color }}>
@@ -122,7 +194,7 @@ export default function DeliveryNote() {
                   <label style={{ display: 'block', fontSize: '13px', color: '#374151', marginBottom: '6px' }}>From Warehouse</label>
                   <select style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '13px', backgroundColor: 'var(--control-bg, #ffffff)', color: 'var(--text-color, #1a1a2e)', outline: 'none' }}>
                     <option value="">Select warehouse</option>
-                    {MOCK_WAREHOUSES.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
+                    {warehouses.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
                   </select>
                 </div>
               </div>

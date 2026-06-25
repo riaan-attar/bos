@@ -1,22 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Plus, X, LayoutList, MoreHorizontal, RefreshCw, Filter, ArrowUpDown, Columns } from 'lucide-react';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+const FALLBACK_UOM = [
+  { name: 'Bag', abbr: 'Bag', desc: 'Cement Bag (50kg)' },
+  { name: 'Kilogram', abbr: 'KG', desc: 'Weight in Kilograms' },
+  { name: 'Numbers', abbr: 'Nos', desc: 'Quantity in Numbers' },
+  { name: 'Cubic Feet', abbr: 'CFT', desc: 'Volume in Cubic Feet' },
+  { name: 'Square Feet', abbr: 'SqFt', desc: 'Area in Square Feet' },
+  { name: 'Litre', abbr: 'Ltr', desc: 'Volume in Litres' },
+  { name: 'Metre', abbr: 'Mtr', desc: 'Length in Metres' },
+  { name: 'Sheet', abbr: 'Sht', desc: 'Quantity in Sheets' },
+  { name: 'Metric Ton', abbr: 'MT', desc: 'Weight in Metric Tons (1000 kg)' },
+  { name: 'Ton', abbr: 'Ton', desc: 'Weight in Tons' },
+];
+
+const mapItem = (item) => ({
+  name: item.name || item.uom_name || '—',
+  abbr: item.abbr || item.symbol || item.abbreviation || item.name || '—',
+  desc: item.desc || item.description || '—',
+});
 
 export default function UnitOfMeasure() {
   const [showModal, setShowModal] = useState(false);
-  
-  const mockUOM = [
-    { name: 'Bag', abbr: 'Bag', desc: 'Cement Bag (50kg)' },
-    { name: 'Kilogram', abbr: 'KG', desc: 'Weight in Kilograms' },
-    { name: 'Numbers', abbr: 'Nos', desc: 'Quantity in Numbers' },
-    { name: 'Cubic Feet', abbr: 'CFT', desc: 'Volume in Cubic Feet' },
-    { name: 'Square Feet', abbr: 'SqFt', desc: 'Area in Square Feet' },
-    { name: 'Litre', abbr: 'Ltr', desc: 'Volume in Litres' },
-    { name: 'Metre', abbr: 'Mtr', desc: 'Length in Metres' },
-    { name: 'Sheet', abbr: 'Sht', desc: 'Quantity in Sheets' },
-    { name: 'Metric Ton', abbr: 'MT', desc: 'Weight in Metric Tons (1000 kg)' },
-    { name: 'Ton', abbr: 'Ton', desc: 'Weight in Tons' },
-  ];
+  const [mockUOM, setMockUOM] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const apiUrl = `${API_BASE}/api/stock/uoms`;
+      console.log('Fetching from:', apiUrl);
+      
+      const res = await axios.get(apiUrl);
+      
+      console.log('Response status:', res.status);
+      console.log('Response data:', res.data);
+      console.log('Data type:', typeof res.data);
+      console.log('Is array:', Array.isArray(res.data));
+      
+      let fetchedItems = [];
+      
+      if (Array.isArray(res.data)) {
+        fetchedItems = res.data;
+      } else if (res.data?.data) {
+        fetchedItems = res.data.data;
+      } else if (res.data?.uoms) {
+        fetchedItems = res.data.uoms;
+      } else if (res.data?.result) {
+        fetchedItems = res.data.result;
+      }
+      
+      console.log('Parsed items:', fetchedItems);
+      console.log('Items count:', fetchedItems.length);
+      
+      if (fetchedItems.length > 0) {
+        setMockUOM(fetchedItems.map(mapItem));
+      } else {
+        console.log('No data from API, using fallback');
+        setMockUOM(FALLBACK_UOM);
+      }
+      
+    } catch (err) {
+      console.error('API Error:', err.message);
+      console.error('Error details:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      setMockUOM(FALLBACK_UOM);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div style={{ padding: '24px 32px', backgroundColor: 'var(--bg-color, #f8f9fa)', minHeight: '100%', fontFamily: 'Inter, sans-serif' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>

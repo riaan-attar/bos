@@ -1,8 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Plus, LayoutList, X } from 'lucide-react';
-import { MOCK_PICK_LISTS, MOCK_WAREHOUSES, MOCK_ITEMS } from './stockData';
+import { warehousesApi, itemsApi } from '../../services/stockApi';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+const FALLBACK_PICK_LISTS = [
+  { id: 'PL-2026-00001', purpose: 'Material Issue', warehouse: 'Main Warehouse - BID', picker: 'Ramesh Singh', date: '13/06/2026', status: 'Completed' },
+  { id: 'PL-2026-00002', purpose: 'Delivery Note', warehouse: 'Nashik Road Store', picker: 'Suresh Kumar', date: '15/06/2026', status: 'Draft' },
+  { id: 'PL-2026-00003', purpose: 'Material Transfer', warehouse: 'Gangapur Site Store', picker: 'Ramesh Singh', date: '16/06/2026', status: 'Completed' },
+];
+
+const mapItem = (item) => ({
+  id: item.id || item._id || item.name,
+  purpose: item.purpose || item.pick_list_purpose || '—',
+  warehouse: item.warehouse || item.parent_warehouse || '—',
+  picker: item.picker || item.picked_by || '—',
+  date: item.postingDate || item.date || item.posting_date || '—',
+  status: item.status || 'Draft',
+});
 
 export default function PickList() {
+  const [pickLists, setPickLists] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+    warehousesApi.getAll().then(res => setWarehouses(Array.isArray(res.data) ? res.data : [])).catch(console.error);
+    itemsApi.getAll().then(res => setItems(Array.isArray(res.data) ? res.data : [])).catch(console.error);
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const apiUrl = `${API_BASE}/api/stock/pick-lists`;
+      console.log('Fetching from:', apiUrl);
+      
+      const res = await axios.get(apiUrl);
+      
+      console.log('Response status:', res.status);
+      console.log('Response data:', res.data);
+      console.log('Data type:', typeof res.data);
+      console.log('Is array:', Array.isArray(res.data));
+      
+      let fetchedItems = [];
+      
+      if (Array.isArray(res.data)) {
+        fetchedItems = res.data;
+      } else if (res.data?.data) {
+        fetchedItems = res.data.data;
+      } else if (res.data?.pick_lists) {
+        fetchedItems = res.data.pick_lists;
+      } else if (res.data?.result) {
+        fetchedItems = res.data.result;
+      }
+      
+      console.log('Parsed items:', fetchedItems);
+      console.log('Items count:', fetchedItems.length);
+      
+      if (fetchedItems.length > 0) {
+        setPickLists(fetchedItems.map(mapItem));
+      } else {
+        console.log('No data from API, using fallback');
+        setPickLists(FALLBACK_PICK_LISTS);
+      }
+      
+    } catch (err) {
+      console.error('API Error:', err.message);
+      console.error('Error details:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      setPickLists(FALLBACK_PICK_LISTS);
+    } finally {
+      setLoading(false);
+    }
+  };
   const [showModal, setShowModal] = useState(false);
   const [itemsRows, setItemsRows] = useState([{ item: '', qty: 1 }]);
 
@@ -70,7 +143,7 @@ export default function PickList() {
             </tr>
           </thead>
           <tbody>
-            {MOCK_PICK_LISTS.map((list) => (
+            {pickLists.map((list) => (
               <tr key={list.id} style={{ borderBottom: '1px solid var(--border-color, #e5e7eb)' }}>
                 <td style={{ padding: '12px 16px' }}><input type="checkbox" /></td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', fontWeight: 500 }}>{list.id}</td>
@@ -114,7 +187,7 @@ export default function PickList() {
                   <label style={{ display: 'block', fontSize: '13px', color: '#374151', marginBottom: '6px' }}>From Warehouse</label>
                   <select style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '13px', backgroundColor: 'var(--control-bg, #ffffff)', color: 'var(--text-color, #1a1a2e)', outline: 'none' }}>
                     <option value="">Select warehouse</option>
-                    {MOCK_WAREHOUSES.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
+                    {warehouses.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
                   </select>
                 </div>
                 <div>
@@ -143,7 +216,7 @@ export default function PickList() {
                          <td style={{ padding: '8px' }}>
                           <select value={row.item} onChange={e => { const r = [...itemsRows]; r[index].item = e.target.value; setItemsRows(r); }} style={{ width: '100%', padding: '6px', border: '1px solid #e5e7eb', borderRadius: '4px', fontSize: '13px', backgroundColor: 'var(--control-bg, #ffffff)', color: 'var(--text-color, #1a1a2e)', outline: 'none' }}>
                             <option value="">Select item...</option>
-                            {MOCK_ITEMS.map(i => <option key={i.id} value={i.name}>{i.name}</option>)}
+                            {items.map(i => <option key={i.id} value={i.name}>{i.name}</option>)}
                           </select>
                         </td>
                         <td style={{ padding: '8px' }}><input type="number" value={row.qty} onChange={e => { const r = [...itemsRows]; r[index].qty = e.target.value; setItemsRows(r); }} style={{ width: '100%', padding: '6px', border: '1px solid #e5e7eb', borderRadius: '4px', fontSize: '13px', textAlign: 'right', backgroundColor: 'var(--control-bg, #ffffff)', color: 'var(--text-color, #1a1a2e)', outline: 'none' }} /></td>

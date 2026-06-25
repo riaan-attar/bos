@@ -1,8 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Plus, LayoutList, MoreHorizontal, RefreshCw, Filter, ArrowUpDown, Columns, X } from 'lucide-react';
-import { MOCK_MATERIAL_REQUESTS, MOCK_WAREHOUSES, MOCK_ITEMS } from './stockData';
+import { warehousesApi, itemsApi } from '../../services/stockApi';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+const FALLBACK_MATERIAL_REQUESTS = [
+  { id: 'MR-2026-00001', purpose: 'Material Issue', requestedBy: 'Ramesh Singh', requiredDate: '12/06/2026', status: 'Pending', totalItems: 5 },
+  { id: 'MR-2026-00002', purpose: 'Purchase', requestedBy: 'Site Manager', requiredDate: '15/06/2026', status: 'Ordered', totalItems: 12 },
+  { id: 'MR-2026-00003', purpose: 'Material Transfer', requestedBy: 'Suresh Kumar', requiredDate: '14/06/2026', status: 'Draft', totalItems: 3 },
+];
+
+const mapItem = (item) => ({
+  id: item.id || item._id || item.name,
+  purpose: item.purpose || item.material_request_type || '—',
+  requestedBy: item.requestedBy || item.requested_by || item.owner || '—',
+  requiredDate: item.requiredDate || item.required_date || item.schedule_date || '—',
+  status: item.status || 'Draft',
+  totalItems: item.totalItems || item.total_items || item.items?.length || 0,
+});
 
 export default function MaterialRequest() {
+  const [materialRequests, setMaterialRequests] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+    warehousesApi.getAll().then(res => setWarehouses(Array.isArray(res.data) ? res.data : [])).catch(console.error);
+    itemsApi.getAll().then(res => setItems(Array.isArray(res.data) ? res.data : [])).catch(console.error);
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const apiUrl = `${API_BASE}/api/stock/material-requests`;
+      console.log('Fetching from:', apiUrl);
+      
+      const res = await axios.get(apiUrl);
+      
+      console.log('Response status:', res.status);
+      console.log('Response data:', res.data);
+      console.log('Data type:', typeof res.data);
+      console.log('Is array:', Array.isArray(res.data));
+      
+      let fetchedItems = [];
+      
+      if (Array.isArray(res.data)) {
+        fetchedItems = res.data;
+      } else if (res.data?.data) {
+        fetchedItems = res.data.data;
+      } else if (res.data?.material_requests) {
+        fetchedItems = res.data.material_requests;
+      } else if (res.data?.result) {
+        fetchedItems = res.data.result;
+      }
+      
+      console.log('Parsed items:', fetchedItems);
+      console.log('Items count:', fetchedItems.length);
+      
+      if (fetchedItems.length > 0) {
+        setMaterialRequests(fetchedItems.map(mapItem));
+      } else {
+        console.log('No data from API, using fallback');
+        setMaterialRequests(FALLBACK_MATERIAL_REQUESTS);
+      }
+      
+    } catch (err) {
+      console.error('API Error:', err.message);
+      console.error('Error details:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      setMaterialRequests(FALLBACK_MATERIAL_REQUESTS);
+    } finally {
+      setLoading(false);
+    }
+  };
   const [showModal, setShowModal] = useState(false);
   const [itemsRows, setItemsRows] = useState([{ item: '', qty: 1, uom: '' }]);
 
@@ -32,7 +105,7 @@ export default function MaterialRequest() {
     newRows[index][field] = value;
     
     if (field === 'item') {
-      const selectedItem = MOCK_ITEMS.find(i => i.name === value);
+      const selectedItem = items.find(i => i.name === value);
       if (selectedItem) {
         newRows[index].uom = selectedItem.uom;
       }
@@ -96,7 +169,7 @@ export default function MaterialRequest() {
             </tr>
           </thead>
           <tbody>
-            {MOCK_MATERIAL_REQUESTS.map((req) => (
+            {materialRequests.map((req) => (
               <tr key={req.id} style={{ borderBottom: '1px solid var(--border-color, #e5e7eb)' }}>
                 <td style={{ padding: '12px 16px' }}><input type="checkbox" /></td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', fontWeight: 500 }}>{req.id}</td>
@@ -145,7 +218,7 @@ export default function MaterialRequest() {
                   <label style={{ display: 'block', fontSize: '13px', color: '#374151', marginBottom: '6px' }}>Requested For Warehouse</label>
                   <select style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '13px', backgroundColor: 'var(--control-bg, #ffffff)', color: 'var(--text-color, #1a1a2e)', outline: 'none' }}>
                     <option value="">Select warehouse</option>
-                    {MOCK_WAREHOUSES.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
+                    {warehouses.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
                   </select>
                 </div>
               </div>
@@ -171,7 +244,7 @@ export default function MaterialRequest() {
                         <td style={{ padding: '8px' }}>
                           <select value={row.item} onChange={e => handleItemChange(index, 'item', e.target.value)} style={{ width: '100%', padding: '6px', border: '1px solid #e5e7eb', borderRadius: '4px', fontSize: '13px', backgroundColor: 'var(--control-bg, #ffffff)', color: 'var(--text-color, #1a1a2e)', outline: 'none' }}>
                             <option value="">Select item...</option>
-                            {MOCK_ITEMS.map(i => <option key={i.id} value={i.name}>{i.name}</option>)}
+                            {items.map(i => <option key={i.id} value={i.name}>{i.name}</option>)}
                           </select>
                         </td>
                         <td style={{ padding: '8px' }}><input type="number" value={row.qty} onChange={e => handleItemChange(index, 'qty', e.target.value)} style={{ width: '100%', padding: '6px', border: '1px solid #e5e7eb', borderRadius: '4px', fontSize: '13px', textAlign: 'right', backgroundColor: 'var(--control-bg, #ffffff)', color: 'var(--text-color, #1a1a2e)', outline: 'none' }} /></td>

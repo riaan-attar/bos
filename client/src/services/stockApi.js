@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE = `${import.meta.env.VITE_API_URL}/api/stock`;
+const BASE = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/stock`;
 
 const api = axios.create({ baseURL: BASE });
 
@@ -30,28 +30,42 @@ export const qualityInspectionsApi = crud('/quality-inspections');
 // ─── Dashboard aggregates (derived from entity data) ─────────────────────────
 // These aggregate on the frontend since the backend doesn't have a /dashboard endpoint.
 export const fetchDashboardData = async () => {
-  const [itemsRes, warehousesRes] = await Promise.all([
-    api.get('/items'),
-    api.get('/warehouses'),
-  ]);
-  const items      = itemsRes.data      || [];
-  const warehouses = warehousesRes.data || [];
+  try {
+    const [itemsRes, warehousesRes] = await Promise.all([
+      api.get('/items'),
+      api.get('/warehouses'),
+    ]);
+    
+    const items = Array.isArray(itemsRes?.data) ? itemsRes.data : [];
+    const warehouses = Array.isArray(warehousesRes?.data) ? warehousesRes.data : [];
 
-  const totalStockValue = warehouses.reduce(
-    (sum, w) => sum + (parseFloat(w.stockValue) || 0), 0
-  );
+    const totalStockValue = warehouses.reduce(
+      (sum, w) => sum + (parseFloat(w.stockValue) || 0), 0
+    );
 
-  const warehouseChartData = warehouses.map(w => ({
-    warehouse: w.name,
-    value: parseFloat(w.stockValue) || 0,
-  }));
+    const warehouseChartData = warehouses.map(w => ({
+      warehouse: w.name,
+      value: parseFloat(w.stockValue) || 0,
+    }));
 
-  return {
-    totalItems:      items.length,
-    totalWarehouses: warehouses.length,
-    totalStockValue,
-    warehouseChartData,
-    items,
-    warehouses,
-  };
+    return {
+      totalItems:      items.length,
+      totalWarehouses: warehouses.length,
+      totalStockValue,
+      warehouseChartData,
+      items,
+      warehouses,
+    };
+  } catch (error) {
+    console.error("Dashboard fetch error:", error);
+    return {
+      totalItems: 0,
+      totalWarehouses: 0,
+      totalStockValue: 0,
+      warehouseChartData: [],
+      items: [],
+      warehouses: [],
+    };
+  }
 };
+

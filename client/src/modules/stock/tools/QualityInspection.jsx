@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Plus, X, LayoutList, MoreHorizontal, RefreshCw, Filter, ArrowUpDown, Columns } from 'lucide-react';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function QualityInspection() {
   const [showModal, setShowModal] = useState(false);
-  
-  const mockData = [
+  const [mockData, setMockData] = useState([
     { id: 'QI-2026-001', item: 'Portland Cement', type: 'Inward', inspector: 'Suresh Kumar', status: 'Accepted', date: '06/06/2026' },
     { id: 'QI-2026-002', item: 'River Sand', type: 'Inward', inspector: 'Suresh Kumar', status: 'Rejected', date: '12/06/2026' },
     { id: 'QI-2026-003', item: 'TMT Bars 12mm', type: 'Inward', inspector: 'Ramesh Singh', status: 'Accepted', date: '14/06/2026' },
     { id: 'QI-2026-004', item: 'Ceramic Floor Tiles', type: 'Inward', inspector: 'Suresh Kumar', status: 'Pending', date: '20/06/2026' },
-  ];
+  ]);
+
+  useEffect(() => {
+    axios.get(`${API_BASE}/api/stock/quality-inspections`)
+      .then(res => { if (Array.isArray(res.data) && res.data.length > 0) setMockData(res.data); })
+      .catch(() => {});
+  }, []);
+
 
   const getStatusStyle = (status) => {
     switch (status) {

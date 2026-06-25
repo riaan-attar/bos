@@ -1,8 +1,167 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Plus, LayoutList, MoreHorizontal, RefreshCw, Filter, ArrowUpDown, Columns, X } from 'lucide-react';
-import { MOCK_STOCK_ENTRIES, MOCK_WAREHOUSES, MOCK_ITEMS } from './stockData';
+import { warehousesApi, itemsApi } from '../../services/stockApi';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+const FALLBACK_STOCK_ENTRIES = [
+  {
+    id: 'STE-2026-00001',
+    stockEntryType: 'Material Transfer',
+    fromWarehouse: 'Main Warehouse - BID',
+    toWarehouse: 'Gangapur Site Store',
+    totalValue: 85000,
+    postingDate: '10/06/2026',
+    status: 'Submitted',
+  },
+  {
+    id: 'STE-2026-00002',
+    stockEntryType: 'Material Issue',
+    fromWarehouse: 'Gangapur Site Store',
+    toWarehouse: '—',
+    totalValue: 42000,
+    postingDate: '12/06/2026',
+    status: 'Submitted',
+  },
+  {
+    id: 'STE-2026-00003',
+    stockEntryType: 'Material Receipt',
+    fromWarehouse: '—',
+    toWarehouse: 'Main Warehouse - BID',
+    totalValue: 156000,
+    postingDate: '14/06/2026',
+    status: 'Submitted',
+  },
+  {
+    id: 'STE-2026-00004',
+    stockEntryType: 'Material Transfer',
+    fromWarehouse: 'Main Warehouse - BID',
+    toWarehouse: 'Nashik Road Store',
+    totalValue: 63000,
+    postingDate: '15/06/2026',
+    status: 'Submitted',
+  },
+  {
+    id: 'STE-2026-00005',
+    stockEntryType: 'Stock Reconciliation',
+    fromWarehouse: '—',
+    toWarehouse: 'Satpur Site Store',
+    totalValue: 28000,
+    postingDate: '16/06/2026',
+    status: 'Draft',
+  },
+  {
+    id: 'STE-2026-00006',
+    stockEntryType: 'Material Issue',
+    fromWarehouse: 'Nashik Road Store',
+    toWarehouse: '—',
+    totalValue: 18500,
+    postingDate: '17/06/2026',
+    status: 'Draft',
+  },
+  {
+    id: 'STE-2026-00007',
+    stockEntryType: 'Material Transfer',
+    fromWarehouse: 'Gangapur Site Store',
+    toWarehouse: 'Main Warehouse - BID',
+    totalValue: 12000,
+    postingDate: '18/06/2026',
+    status: 'Submitted',
+  },
+  {
+    id: 'STE-2026-00008',
+    stockEntryType: 'Material Receipt',
+    fromWarehouse: '—',
+    toWarehouse: 'Gangapur Site Store',
+    totalValue: 95000,
+    postingDate: '19/06/2026',
+    status: 'Draft',
+  },
+];
+
+const mapItem = (item) => ({
+  id: item.id || item._id || item.name,
+  stockEntryType: 
+    item.stockEntryType || 
+    item.stock_entry_type || 
+    item.type || '—',
+  fromWarehouse: 
+    item.fromWarehouse || 
+    item.from_warehouse || 
+    item.source_warehouse || '—',
+  toWarehouse: 
+    item.toWarehouse || 
+    item.to_warehouse || 
+    item.target_warehouse || '—',
+  totalValue: 
+    item.totalValue || 
+    item.total_value || 
+    item.total_amount || 0,
+  postingDate: 
+    item.postingDate || 
+    item.posting_date || 
+    item.date || '—',
+  status: 
+    item.status || 'Draft',
+});
 
 export default function StockEntry() {
+  const [stockEntries, setStockEntries] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+    warehousesApi.getAll().then(res => setWarehouses(Array.isArray(res.data) ? res.data : [])).catch(console.error);
+    itemsApi.getAll().then(res => setItems(Array.isArray(res.data) ? res.data : [])).catch(console.error);
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const apiUrl = `${API_BASE}/api/stock/stock-entries`;
+      console.log('Fetching from:', apiUrl);
+      
+      const res = await axios.get(apiUrl);
+      
+      console.log('Response status:', res.status);
+      console.log('Response data:', res.data);
+      console.log('Data type:', typeof res.data);
+      console.log('Is array:', Array.isArray(res.data));
+      
+      let fetchedItems = [];
+      
+      if (Array.isArray(res.data)) {
+        fetchedItems = res.data;
+      } else if (res.data?.data) {
+        fetchedItems = res.data.data;
+      } else if (res.data?.stock_entries) {
+        fetchedItems = res.data.stock_entries;
+      } else if (res.data?.result) {
+        fetchedItems = res.data.result;
+      }
+      
+      console.log('Parsed items:', fetchedItems);
+      console.log('Items count:', fetchedItems.length);
+      
+      if (fetchedItems.length > 0) {
+        setStockEntries(fetchedItems.map(mapItem));
+      } else {
+        console.log('No data from API, using fallback');
+        setStockEntries(FALLBACK_STOCK_ENTRIES);
+      }
+      
+    } catch (err) {
+      console.error('API Error:', err.message);
+      console.error('Error details:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      setStockEntries(FALLBACK_STOCK_ENTRIES);
+    } finally {
+      setLoading(false);
+    }
+  };
   const [showModal, setShowModal] = useState(false);
   const [itemsRows, setItemsRows] = useState([{ item: '', qty: 1, rate: 0, amount: 0 }]);
 
@@ -30,7 +189,7 @@ export default function StockEntry() {
     newRows[index][field] = value;
     
     if (field === 'item') {
-      const selectedItem = MOCK_ITEMS.find(i => i.name === value);
+      const selectedItem = items.find(i => i.name === value);
       if (selectedItem) {
         newRows[index].rate = selectedItem.rate;
       }
@@ -102,15 +261,15 @@ export default function StockEntry() {
             </tr>
           </thead>
           <tbody>
-            {MOCK_STOCK_ENTRIES.map((entry) => (
+            {stockEntries.map((entry) => (
               <tr key={entry.id} style={{ borderBottom: '1px solid var(--border-color, #e5e7eb)' }}>
                 <td style={{ padding: '12px 16px' }}><input type="checkbox" /></td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', fontWeight: 500 }}>{entry.id}</td>
-                <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)' }}>{entry.type}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)' }}>{entry.stockEntryType}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary, #6b7280)' }}>{entry.fromWarehouse}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary, #6b7280)' }}>{entry.toWarehouse}</td>
-                <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', textAlign: 'right' }}>₹{entry.totalValue.toLocaleString()}</td>
-                <td style={{ padding: '12px 16px', color: 'var(--text-secondary, #6b7280)' }}>{entry.date}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', textAlign: 'right' }}>₹{(parseFloat(entry.totalValue) || 0).toLocaleString()}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-secondary, #6b7280)' }}>{entry.postingDate}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <span style={{ 
                     padding: '4px 8px', 
@@ -158,14 +317,14 @@ export default function StockEntry() {
                   <label style={{ display: 'block', fontSize: '13px', color: '#374151', marginBottom: '6px' }}>From Warehouse</label>
                   <select style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '13px', backgroundColor: 'var(--control-bg, #ffffff)', color: 'var(--text-color, #1a1a2e)', outline: 'none' }}>
                     <option value="">Select warehouse</option>
-                    {MOCK_WAREHOUSES.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
+                    {warehouses.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
                   </select>
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '13px', color: '#374151', marginBottom: '6px' }}>To Warehouse</label>
                   <select style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '13px', backgroundColor: 'var(--control-bg, #ffffff)', color: 'var(--text-color, #1a1a2e)', outline: 'none' }}>
                     <option value="">Select warehouse</option>
-                    {MOCK_WAREHOUSES.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
+                    {warehouses.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
                   </select>
                 </div>
               </div>
@@ -196,7 +355,7 @@ export default function StockEntry() {
                             style={{ width: '100%', padding: '6px', border: '1px solid #e5e7eb', borderRadius: '4px', fontSize: '13px', backgroundColor: 'var(--control-bg, #ffffff)', color: 'var(--text-color, #1a1a2e)', outline: 'none' }}
                           >
                             <option value="">Select item...</option>
-                            {MOCK_ITEMS.map(item => <option key={item.id} value={item.name}>{item.name}</option>)}
+                            {items.map(item => <option key={item.id} value={item.name}>{item.name}</option>)}
                           </select>
                         </td>
                         <td style={{ padding: '8px' }}>

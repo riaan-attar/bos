@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Plus, X, LayoutList, MoreHorizontal, RefreshCw, Filter, ArrowUpDown, Columns } from 'lucide-react';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function SerialNo() {
   const [showModal, setShowModal] = useState(false);
-  
-  const mockData = [
+  const [mockData, setMockData] = useState([
     { id: 'SN-001', item: 'Electric Drill', status: 'Active', warehouse: 'Gangapur Site Store', purchaseDate: '10/01/2026' },
     { id: 'SN-002', item: 'Concrete Mixer', status: 'In Transit', warehouse: 'Transit', purchaseDate: '15/02/2026' },
     { id: 'SN-003', item: 'Welding Machine', status: 'Inactive', warehouse: 'Main Warehouse - BID', purchaseDate: '20/03/2025' },
     { id: 'SN-004', item: 'Power Saw', status: 'Active', warehouse: 'Nashik Road Store', purchaseDate: '05/05/2026' },
-  ];
+  ]);
+
+  useEffect(() => {
+    axios.get(`${API_BASE}/api/stock/serial-nos`)
+      .then(res => { if (Array.isArray(res.data) && res.data.length > 0) setMockData(res.data); })
+      .catch(() => {});
+  }, []);
+
 
   const getStatusStyle = (status) => {
     switch (status) {

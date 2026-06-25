@@ -1,19 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Plus, X, LayoutList, MoreHorizontal, RefreshCw, Filter, ArrowUpDown, Columns } from 'lucide-react';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+const FALLBACK_GROUPS = [
+  { name: 'Construction Material', itemsCount: 45, desc: 'Cement, Bricks, Blocks, Sand, Aggregate' },
+  { name: 'Steel', itemsCount: 12, desc: 'TMT Bars, Structural Steel, Binding Wire' },
+  { name: 'Aggregates', itemsCount: 8, desc: 'Crushed Stone, River Sand, M-Sand' },
+  { name: 'Finishing', itemsCount: 120, desc: 'Tiles, Paint, Granite, Marble' },
+  { name: 'Plumbing', itemsCount: 85, desc: 'Pipes, Fittings, Fixtures, Pumps' },
+  { name: 'Electrical', itemsCount: 150, desc: 'Wires, Switches, Conduits, Lighting' },
+  { name: 'Wood & Timber', itemsCount: 30, desc: 'Plywood, Flush Doors, Teak Wood' },
+  { name: 'Other', itemsCount: 50, desc: 'Safety Gear, Tools, Consumables' },
+];
+
+const mapItem = (item) => ({
+  name: item.name || item.item_group_name || '—',
+  itemsCount: item.itemsCount || item.items_count || 0,
+  desc: item.desc || item.description || '—',
+});
 
 export default function ItemGroup() {
   const [showModal, setShowModal] = useState(false);
-  
-  const mockGroups = [
-    { name: 'Construction Material', itemsCount: 45, desc: 'Cement, Bricks, Blocks, Sand, Aggregate' },
-    { name: 'Steel', itemsCount: 12, desc: 'TMT Bars, Structural Steel, Binding Wire' },
-    { name: 'Aggregates', itemsCount: 8, desc: 'Crushed Stone, River Sand, M-Sand' },
-    { name: 'Finishing', itemsCount: 120, desc: 'Tiles, Paint, Granite, Marble' },
-    { name: 'Plumbing', itemsCount: 85, desc: 'Pipes, Fittings, Fixtures, Pumps' },
-    { name: 'Electrical', itemsCount: 150, desc: 'Wires, Switches, Conduits, Lighting' },
-    { name: 'Wood & Timber', itemsCount: 30, desc: 'Plywood, Flush Doors, Teak Wood' },
-    { name: 'Other', itemsCount: 50, desc: 'Safety Gear, Tools, Consumables' },
-  ];
+  const [mockGroups, setMockGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const apiUrl = `${API_BASE}/api/stock/item-groups`;
+      console.log('Fetching from:', apiUrl);
+      
+      const res = await axios.get(apiUrl);
+      
+      console.log('Response status:', res.status);
+      console.log('Response data:', res.data);
+      console.log('Data type:', typeof res.data);
+      console.log('Is array:', Array.isArray(res.data));
+      
+      let fetchedItems = [];
+      
+      if (Array.isArray(res.data)) {
+        fetchedItems = res.data;
+      } else if (res.data?.data) {
+        fetchedItems = res.data.data;
+      } else if (res.data?.item_groups) {
+        fetchedItems = res.data.item_groups;
+      } else if (res.data?.result) {
+        fetchedItems = res.data.result;
+      }
+      
+      console.log('Parsed items:', fetchedItems);
+      console.log('Items count:', fetchedItems.length);
+      
+      if (fetchedItems.length > 0) {
+        setMockGroups(fetchedItems.map(mapItem));
+      } else {
+        console.log('No data from API, using fallback');
+        setMockGroups(FALLBACK_GROUPS);
+      }
+      
+    } catch (err) {
+      console.error('API Error:', err.message);
+      console.error('Error details:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      setMockGroups(FALLBACK_GROUPS);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div style={{ padding: '24px 32px', backgroundColor: 'var(--bg-color, #f8f9fa)', minHeight: '100%', fontFamily: 'Inter, sans-serif' }}>

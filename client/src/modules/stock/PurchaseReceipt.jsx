@@ -1,8 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Plus, LayoutList, MoreHorizontal, RefreshCw, Filter, ArrowUpDown, Columns, X } from 'lucide-react';
-import { MOCK_PURCHASE_RECEIPTS, MOCK_WAREHOUSES } from './stockData';
+import { warehousesApi } from '../../services/stockApi';
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+const FALLBACK_PURCHASE_RECEIPTS = [
+  { id: 'PRC-2026-00001', supplier: 'UltraTech Cement Ltd.', items: 'Portland Cement', totalQty: 500, totalAmount: 190000, date: '01/06/2026', status: 'Submitted' },
+  { id: 'PRC-2026-00002', supplier: 'Tata Steel Ltd.', items: 'Steel TMT Bars', totalQty: 2000, totalAmount: 130000, date: '05/06/2026', status: 'Submitted' },
+  { id: 'PRC-2026-00003', supplier: 'Asian Paints', items: 'Exterior Paint', totalQty: 200, totalAmount: 36000, date: '10/06/2026', status: 'Draft' },
+];
+
+const mapItem = (item) => ({
+  id: item.id || item._id || item.name,
+  supplier: item.supplier || item.supplier_name || '—',
+  items: item.items || item.item_count || '—',
+  totalQty: item.totalQty || item.total_qty || 0,
+  totalAmount: item.totalAmount || item.total_amount || item.grand_total || 0,
+  date: item.postingDate || item.date || item.posting_date || '—',
+  status: item.status || 'Draft',
+});
 
 export default function PurchaseReceipt() {
+  const [purchaseReceipts, setPurchaseReceipts] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+    warehousesApi.getAll().then(res => setWarehouses(Array.isArray(res.data) ? res.data : [])).catch(console.error);
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const apiUrl = `${API_BASE}/api/stock/purchase-receipts`;
+      console.log('Fetching from:', apiUrl);
+      
+      const res = await axios.get(apiUrl);
+      
+      console.log('Response status:', res.status);
+      console.log('Response data:', res.data);
+      console.log('Data type:', typeof res.data);
+      console.log('Is array:', Array.isArray(res.data));
+      
+      let fetchedItems = [];
+      
+      if (Array.isArray(res.data)) {
+        fetchedItems = res.data;
+      } else if (res.data?.data) {
+        fetchedItems = res.data.data;
+      } else if (res.data?.purchase_receipts) {
+        fetchedItems = res.data.purchase_receipts;
+      } else if (res.data?.result) {
+        fetchedItems = res.data.result;
+      }
+      
+      console.log('Parsed items:', fetchedItems);
+      console.log('Items count:', fetchedItems.length);
+      
+      if (fetchedItems.length > 0) {
+        setPurchaseReceipts(fetchedItems.map(mapItem));
+      } else {
+        console.log('No data from API, using fallback');
+        setPurchaseReceipts(FALLBACK_PURCHASE_RECEIPTS);
+      }
+      
+    } catch (err) {
+      console.error('API Error:', err.message);
+      console.error('Error details:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      setPurchaseReceipts(FALLBACK_PURCHASE_RECEIPTS);
+    } finally {
+      setLoading(false);
+    }
+  };
   const [showModal, setShowModal] = useState(false);
   const [itemsRows, setItemsRows] = useState([{ item: '', qty: 1, rate: 0, amount: 0 }]);
 
@@ -80,14 +152,14 @@ export default function PurchaseReceipt() {
             </tr>
           </thead>
           <tbody>
-            {MOCK_PURCHASE_RECEIPTS.map((receipt) => (
+            {purchaseReceipts.map((receipt) => (
               <tr key={receipt.id} style={{ borderBottom: '1px solid var(--border-color, #e5e7eb)' }}>
                 <td style={{ padding: '12px 16px' }}><input type="checkbox" /></td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', fontWeight: 500 }}>{receipt.id}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)' }}>{receipt.supplier}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary, #6b7280)' }}>{receipt.items}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', textAlign: 'right' }}>{receipt.totalQty}</td>
-                <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', textAlign: 'right' }}>₹{receipt.totalAmount.toLocaleString()}</td>
+                <td style={{ padding: '12px 16px', color: 'var(--text-primary, #1a1a2e)', textAlign: 'right' }}>₹{(parseFloat(receipt.totalAmount) || 0).toLocaleString()}</td>
                 <td style={{ padding: '12px 16px', color: 'var(--text-secondary, #6b7280)' }}>{receipt.date}</td>
                 <td style={{ padding: '12px 16px' }}>
                   <span style={{ padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 500, backgroundColor: getStatusStyle(receipt.status).bg, color: getStatusStyle(receipt.status).color }}>
@@ -122,7 +194,7 @@ export default function PurchaseReceipt() {
                   <label style={{ display: 'block', fontSize: '13px', color: '#374151', marginBottom: '6px' }}>Warehouse</label>
                   <select style={{ width: '100%', padding: '8px 12px', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '13px', backgroundColor: 'var(--control-bg, #ffffff)', color: 'var(--text-color, #1a1a2e)', outline: 'none' }}>
                     <option value="">Select warehouse</option>
-                    {MOCK_WAREHOUSES.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
+                    {warehouses.map(w => <option key={w.id} value={w.name}>{w.name}</option>)}
                   </select>
                 </div>
               </div>

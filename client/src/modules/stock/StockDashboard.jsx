@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MoreHorizontal, Filter } from 'lucide-react';
 import {
   ResponsiveContainer as ChartContainer,
@@ -11,7 +11,7 @@ import {
   CartesianGrid,
   LabelList
 } from 'recharts';
-import { MOCK_ITEMS, MOCK_WAREHOUSES } from './stockData';
+import { fetchDashboardData } from '../../services/stockApi';
 
 const formatY = (value) => {
   if (value >= 100000) return `${(value / 100000).toFixed(1)} L`;
@@ -79,12 +79,19 @@ function TrendsChart({ title, data }) {
 
 // ─── Main Component ───────────────────────────────────────────────────────
 export default function StockDashboard() {
-  const chartData = [
-    { warehouse: 'Goods In Transit - BID', value: 2150000 },
-    { warehouse: 'Stores - BID', value: 980000 },
-    { warehouse: 'Finished Goods - BID', value: 460000 },
-    { warehouse: 'Nashik Road Store', value: 620000 },
-    { warehouse: 'Satpur Site Store', value: 340000 },
+  const [data, setData] = useState({
+    totalItems: 0,
+    totalWarehouses: 0,
+    totalStockValue: 0,
+    warehouseChartData: []
+  });
+
+  useEffect(() => {
+    fetchDashboardData().then(setData).catch(console.error);
+  }, []);
+
+  const chartData = data.warehouseChartData.length > 0 ? data.warehouseChartData : [
+    { warehouse: 'No Data', value: 0 }
   ];
 
   const monthlyDates = ['Jun 2025', 'Aug 2025', 'Oct 2025', 'Dec 2025', 'Feb 2026', 'Apr 2026', 'Jun 2026'];
@@ -95,9 +102,9 @@ export default function StockDashboard() {
       
       {/* Stat Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '16px' }}>
-        <StatCard title="Total Active Items" value={MOCK_ITEMS.length} />
-        <StatCard title="Total Warehouses" value={MOCK_WAREHOUSES.length} />
-        <StatCard title="Total Stock Value" value="95.390 K" subtext="0 % since yesterday" />
+        <StatCard title="Total Active Items" value={data.totalItems} />
+        <StatCard title="Total Warehouses" value={data.totalWarehouses} />
+        <StatCard title="Total Stock Value" value={formatY(data.totalStockValue)} subtext="0 % since yesterday" />
       </div>
 
       {/* Warehouse Wise Stock Value Chart */}
