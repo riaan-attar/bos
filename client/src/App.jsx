@@ -78,6 +78,9 @@ import ItemPrices from './modules/stock/reports/ItemPrices';
 import StockSettings from './modules/stock/StockSettings';
 import StockGettingStarted from './modules/stock/StockGettingStarted';
 
+// Payments Module
+import PaymentsDashboard from './modules/payments/PaymentsDashboard';
+
 
 import NotesPage from './modules/crm/notes/NotesPage';
 import TasksPage from './modules/crm/tasks/TasksPage';
@@ -215,6 +218,11 @@ export default function App() {
 
                       <Route path="stock/settings" element={<StockSettings />} />
                       <Route path="stock/getting-started" element={<StockGettingStarted />} />
+                      
+                      {/* Payments Module Routes */}
+                      <Route path="payments" element={<PaymentsDashboard />} />
+                      <Route path="payments/*" element={<PaymentsDashboard />} />
+                      
                     </Route>
 
                   </Routes>

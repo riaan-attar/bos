@@ -4,7 +4,7 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import SidebarBrand from './SidebarBrand';
 import SidebarNavItem from './SidebarNavItem';
 import SidebarFooter from './SidebarFooter';
-import { SIDEBAR_CONFIG, PROJECTS_SIDEBAR_CONFIG, STOCK_SIDEBAR_CONFIG } from './sidebar.config';
+import { SIDEBAR_CONFIG, PROJECTS_SIDEBAR_CONFIG, STOCK_SIDEBAR_CONFIG, PAYMENTS_SIDEBAR_CONFIG } from './sidebar.config';
 
 function SidebarSectionLabel({ label, isOpen, onToggle, isCollapsed }) {
   if (isCollapsed) return null;
@@ -50,6 +50,12 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotificatio
   const [stockToolsOpen, setStockToolsOpen] = useState(true);
   const [stockSetupOpen, setStockSetupOpen] = useState(true);
   const [stockReportsOpen, setStockReportsOpen] = useState(true);
+
+  // Payments collapsible states
+  const [paymentsErpOpen, setPaymentsErpOpen] = useState(true);
+  const [paymentsReportsOpen, setPaymentsReportsOpen] = useState(true);
+
+  const isPayments = location.pathname.startsWith('/payments');
 
   return (
     <aside
@@ -301,6 +307,69 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotificatio
             ))}
 
             {STOCK_SIDEBAR_CONFIG.footer.map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+              />
+            ))}
+          </>
+        ) : isPayments ? (
+          // ─── PAYMENTS SIDEBAR ───────────────────────────────────────────
+          <>
+            {PAYMENTS_SIDEBAR_CONFIG.main.map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+              />
+            ))}
+
+            <SidebarSectionLabel
+              label="Payments"
+              isOpen={paymentsErpOpen}
+              onToggle={() => setPaymentsErpOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div
+              style={{
+                maxHeight: paymentsErpOpen ? '500px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {PAYMENTS_SIDEBAR_CONFIG.payments.map(item => (
+                <SidebarNavItem 
+                  key={item.key} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                />
+              ))}
+            </div>
+
+            <SidebarSectionLabel
+              label="Reports"
+              isOpen={paymentsReportsOpen}
+              onToggle={() => setPaymentsReportsOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div
+              style={{
+                maxHeight: paymentsReportsOpen ? '500px' : '0',
+                overflow: 'hidden',
+                transition: 'max-height 0.2s ease',
+              }}
+            >
+              {PAYMENTS_SIDEBAR_CONFIG.reports.map(item => (
+                <SidebarNavItem 
+                  key={item.key} 
+                  item={item} 
+                  isCollapsed={isCollapsed} 
+                />
+              ))}
+            </div>
+
+            {PAYMENTS_SIDEBAR_CONFIG.footer.map(item => (
               <SidebarNavItem 
                 key={item.key} 
                 item={item} 

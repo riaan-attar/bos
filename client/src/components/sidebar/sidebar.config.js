@@ -341,3 +341,86 @@ export const STOCK_SIDEBAR_CONFIG = {
     },
   ],
 };
+
+export const PAYMENTS_SIDEBAR_CONFIG = {
+  main: [
+    {
+      key: 'dashboard',
+      label: 'Dashboard',
+      icon: 'LayoutDashboard',
+      route: '/payments',
+    },
+  ],
+  payments: [
+    {
+      key: 'paymentEntry',
+      label: 'Payment Entry',
+      icon: 'FileText',
+      route: '/payments/payment-entry',
+    },
+    {
+      key: 'journalEntry',
+      label: 'Journal Entry',
+      icon: 'BookOpen',
+      route: '/payments/journal-entry',
+    },
+    {
+      key: 'paymentRequest',
+      label: 'Payment Request',
+      icon: 'ClipboardList',
+      route: '/payments/payment-request',
+    },
+    {
+      key: 'paymentOrder',
+      label: 'Payment Order',
+      icon: 'FileCheck',
+      route: '/payments/payment-order',
+    },
+    {
+      key: 'paymentReconciliation',
+      label: 'Payment Reconciliation',
+      icon: 'RefreshCw',
+      route: '/payments/payment-reconciliation',
+    },
+    {
+      key: 'unreconcilePayment',
+      label: 'Unreconcile Payment',
+      icon: 'XCircle',
+      route: '/payments/unreconcile-payment',
+    },
+    {
+      key: 'processPaymentReconciliation',
+      label: 'Process Payment Reconc...',
+      icon: 'Settings',
+      route: '/payments/process-payment-reconciliation',
+    },
+    {
+      key: 'repostAccountingLedger',
+      label: 'Repost Accounting Ledger',
+      icon: 'RotateCcw',
+      route: '/payments/repost-accounting-ledger',
+    },
+    {
+      key: 'repostPaymentLedger',
+      label: 'Repost Payment Ledger',
+      icon: 'RotateCcw',
+      route: '/payments/repost-payment-ledger',
+    },
+  ],
+  reports: [
+    {
+      key: 'reports',
+      label: 'Reports',
+      icon: 'BarChart2',
+      route: '/payments/reports',
+    },
+  ],
+  footer: [
+    {
+      key: 'gettingStarted',
+      label: 'Getting Started',
+      icon: 'Compass',
+      route: '/payments/getting-started',
+    },
+  ],
+};
