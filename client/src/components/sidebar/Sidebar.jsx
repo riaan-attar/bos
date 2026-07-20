@@ -4,7 +4,7 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import SidebarBrand from './SidebarBrand';
 import SidebarNavItem from './SidebarNavItem';
 import SidebarFooter from './SidebarFooter';
-import { SIDEBAR_CONFIG, PROJECTS_SIDEBAR_CONFIG, STOCK_SIDEBAR_CONFIG, PAYMENTS_SIDEBAR_CONFIG } from './sidebar.config';
+import { SIDEBAR_CONFIG, PROJECTS_SIDEBAR_CONFIG, STOCK_SIDEBAR_CONFIG, PAYMENTS_SIDEBAR_CONFIG, INVOICING_SIDEBAR_CONFIG } from './sidebar.config';
 
 function SidebarSectionLabel({ label, isOpen, onToggle, isCollapsed }) {
   if (isCollapsed) return null;
@@ -56,6 +56,14 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotificatio
   const [paymentsReportsOpen, setPaymentsReportsOpen] = useState(true);
 
   const isPayments = location.pathname.startsWith('/payments');
+
+  // Invoicing collapsible states
+  const [invReceivablesOpen, setInvReceivablesOpen] = useState(true);
+  const [invPayablesOpen, setInvPayablesOpen] = useState(true);
+  const [invPaymentsOpen, setInvPaymentsOpen] = useState(true);
+  const [invReportsOpen, setInvReportsOpen] = useState(true);
+
+  const isInvoicing = location.pathname.startsWith('/invoicing');
 
   return (
     <aside
@@ -375,6 +383,73 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, onOpenNotificatio
                 item={item} 
                 isCollapsed={isCollapsed} 
               />
+            ))}
+          </>
+        ) : isInvoicing ? (
+          // ─── INVOICING SIDEBAR ─────────────────────────────────────────────
+          <>
+            {INVOICING_SIDEBAR_CONFIG.main.map(item => (
+              <SidebarNavItem 
+                key={item.key} 
+                item={item} 
+                isCollapsed={isCollapsed} 
+              />
+            ))}
+
+            <SidebarSectionLabel
+              label="Receivables"
+              isOpen={invReceivablesOpen}
+              onToggle={() => setInvReceivablesOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div style={{ maxHeight: invReceivablesOpen ? '500px' : '0', overflow: 'hidden', transition: 'max-height 0.2s ease' }}>
+              {INVOICING_SIDEBAR_CONFIG.receivables.map(item => (
+                <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
+              ))}
+            </div>
+
+            <SidebarSectionLabel
+              label="Payables"
+              isOpen={invPayablesOpen}
+              onToggle={() => setInvPayablesOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div style={{ maxHeight: invPayablesOpen ? '500px' : '0', overflow: 'hidden', transition: 'max-height 0.2s ease' }}>
+              {INVOICING_SIDEBAR_CONFIG.payables.map(item => (
+                <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
+              ))}
+            </div>
+
+            <SidebarSectionLabel
+              label="Payments"
+              isOpen={invPaymentsOpen}
+              onToggle={() => setInvPaymentsOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div style={{ maxHeight: invPaymentsOpen ? '1000px' : '0', overflow: 'hidden', transition: 'max-height 0.3s ease' }}>
+              {INVOICING_SIDEBAR_CONFIG.payments.map(item => (
+                <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
+              ))}
+            </div>
+
+            <SidebarSectionLabel
+              label="Reports"
+              isOpen={invReportsOpen}
+              onToggle={() => setInvReportsOpen(p => !p)}
+              isCollapsed={isCollapsed}
+            />
+            <div style={{ maxHeight: invReportsOpen ? '500px' : '0', overflow: 'hidden', transition: 'max-height 0.2s ease' }}>
+              {INVOICING_SIDEBAR_CONFIG.reports.map(item => (
+                <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
+              ))}
+            </div>
+
+            {INVOICING_SIDEBAR_CONFIG.settings.map(item => (
+              <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
+            ))}
+
+            {INVOICING_SIDEBAR_CONFIG.footer.map(item => (
+              <SidebarNavItem key={item.key} item={item} isCollapsed={isCollapsed} />
             ))}
           </>
         ) : (

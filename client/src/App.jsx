@@ -81,6 +81,36 @@ import StockGettingStarted from './modules/stock/StockGettingStarted';
 // Payments Module
 import PaymentsDashboard from './modules/payments/PaymentsDashboard';
 
+// Invoicing Module
+import InvoicingDashboard from './modules/invoicing/InvoicingDashboard';
+import ChartOfAccounts from './modules/invoicing/ChartOfAccounts';
+import InvoicingSettings from './modules/invoicing/InvoicingSettings';
+import InvoicingGettingStarted from './modules/invoicing/InvoicingGettingStarted';
+// Invoicing Receivables
+import InvCustomer from './modules/invoicing/receivables/Customer';
+import SalesInvoice from './modules/invoicing/receivables/SalesInvoice';
+import CreditNote from './modules/invoicing/receivables/CreditNote';
+import AccountsReceivable from './modules/invoicing/receivables/AccountsReceivable';
+// Invoicing Payables
+import InvSupplier from './modules/invoicing/payables/Supplier';
+import PurchaseInvoice from './modules/invoicing/payables/PurchaseInvoice';
+import DebitNote from './modules/invoicing/payables/DebitNote';
+import AccountsPayable from './modules/invoicing/payables/AccountsPayable';
+// Invoicing Payments
+import InvPaymentEntry from './modules/invoicing/payments/PaymentEntry';
+import InvJournalEntry from './modules/invoicing/payments/JournalEntry';
+import PaymentRequest from './modules/invoicing/payments/PaymentRequest';
+import PaymentOrder from './modules/invoicing/payments/PaymentOrder';
+import PaymentReconciliation from './modules/invoicing/payments/PaymentReconciliation';
+import UnreconcilePayment from './modules/invoicing/payments/UnreconcilePayment';
+import ProcessPaymentReco from './modules/invoicing/payments/ProcessPaymentReco';
+import RepostAccountingLedger from './modules/invoicing/payments/RepostAccountingLedger';
+import RepostPaymentLedger from './modules/invoicing/payments/RepostPaymentLedger';
+// Invoicing Reports
+import GeneralLedger from './modules/invoicing/reports/GeneralLedger';
+import TrialBalance from './modules/invoicing/reports/TrialBalance';
+import FinancialReports from './modules/invoicing/reports/FinancialReports';
+
 
 import NotesPage from './modules/crm/notes/NotesPage';
 import TasksPage from './modules/crm/tasks/TasksPage';
@@ -222,6 +252,39 @@ export default function App() {
                       {/* Payments Module Routes */}
                       <Route path="payments" element={<PaymentsDashboard />} />
                       <Route path="payments/*" element={<PaymentsDashboard />} />
+
+                      {/* Invoicing Module Routes */}
+                      <Route path="invoicing" element={<InvoicingDashboard />} />
+                      <Route path="invoicing/dashboard" element={<InvoicingDashboard />} />
+                      <Route path="invoicing/chart-of-accounts" element={<ChartOfAccounts />} />
+
+                      <Route path="invoicing/receivables/customer" element={<InvCustomer />} />
+                      <Route path="invoicing/receivables/sales-invoice" element={<SalesInvoice />} />
+                      <Route path="invoicing/receivables/credit-note" element={<CreditNote />} />
+                      <Route path="invoicing/receivables/accounts-receivable" element={<AccountsReceivable />} />
+
+                      <Route path="invoicing/payables/supplier" element={<InvSupplier />} />
+                      <Route path="invoicing/payables/purchase-invoice" element={<PurchaseInvoice />} />
+                      <Route path="invoicing/payables/debit-note" element={<DebitNote />} />
+                      <Route path="invoicing/payables/accounts-payable" element={<AccountsPayable />} />
+
+                      <Route path="invoicing/payments/payment-entry" element={<InvPaymentEntry />} />
+                      <Route path="invoicing/payments/journal-entry" element={<InvJournalEntry />} />
+                      <Route path="invoicing/payments/payment-request" element={<PaymentRequest />} />
+                      <Route path="invoicing/payments/payment-order" element={<PaymentOrder />} />
+                      <Route path="invoicing/payments/payment-reconciliation" element={<PaymentReconciliation />} />
+                      <Route path="invoicing/payments/unreconcile-payment" element={<UnreconcilePayment />} />
+                      <Route path="invoicing/payments/process-payment-reco" element={<ProcessPaymentReco />} />
+                      <Route path="invoicing/payments/repost-accounting-ledger" element={<RepostAccountingLedger />} />
+                      <Route path="invoicing/payments/repost-payment-ledger" element={<RepostPaymentLedger />} />
+
+                      <Route path="invoicing/reports/general-ledger" element={<GeneralLedger />} />
+                      <Route path="invoicing/reports/trial-balance" element={<TrialBalance />} />
+                      <Route path="invoicing/reports/financial-reports" element={<FinancialReports />} />
+
+                      <Route path="invoicing/settings" element={<InvoicingSettings />} />
+                      <Route path="invoicing/getting-started" element={<InvoicingGettingStarted />} />
+
                       
                     </Route>
 

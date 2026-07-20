@@ -342,6 +342,173 @@ export const STOCK_SIDEBAR_CONFIG = {
   ],
 };
 
+export const INVOICING_SIDEBAR_CONFIG = {
+  main: [
+    {
+      key: 'invHome',
+      label: 'Home',
+      icon: 'Home',
+      route: '/invoicing',
+    },
+    {
+      key: 'invDashboard',
+      label: 'Dashboard',
+      icon: 'LayoutDashboard',
+      route: '/invoicing/dashboard',
+    },
+    {
+      key: 'chartOfAccounts',
+      label: 'Chart of Accounts',
+      icon: 'BookOpen',
+      route: '/invoicing/chart-of-accounts',
+    },
+  ],
+  receivables: [
+    {
+      key: 'invCustomer',
+      label: 'Customer',
+      icon: 'Users',
+      route: '/invoicing/receivables/customer',
+    },
+    {
+      key: 'salesInvoice',
+      label: 'Sales Invoice',
+      icon: 'FileText',
+      route: '/invoicing/receivables/sales-invoice',
+    },
+    {
+      key: 'creditNote',
+      label: 'Credit Note',
+      icon: 'FileMinus',
+      route: '/invoicing/receivables/credit-note',
+    },
+    {
+      key: 'accountsReceivable',
+      label: 'Accounts Receivable',
+      icon: 'TrendingUp',
+      route: '/invoicing/receivables/accounts-receivable',
+    },
+  ],
+  payables: [
+    {
+      key: 'invSupplier',
+      label: 'Supplier',
+      icon: 'Truck',
+      route: '/invoicing/payables/supplier',
+    },
+    {
+      key: 'purchaseInvoice',
+      label: 'Purchase Invoice',
+      icon: 'FileInput',
+      route: '/invoicing/payables/purchase-invoice',
+    },
+    {
+      key: 'debitNote',
+      label: 'Debit Note',
+      icon: 'FilePlus',
+      route: '/invoicing/payables/debit-note',
+    },
+    {
+      key: 'accountsPayable',
+      label: 'Accounts Payable',
+      icon: 'TrendingDown',
+      route: '/invoicing/payables/accounts-payable',
+    },
+  ],
+  payments: [
+    {
+      key: 'invPaymentEntry',
+      label: 'Payment Entry',
+      icon: 'CreditCard',
+      route: '/invoicing/payments/payment-entry',
+    },
+    {
+      key: 'invJournalEntry',
+      label: 'Journal Entry',
+      icon: 'BookOpen',
+      route: '/invoicing/payments/journal-entry',
+    },
+    {
+      key: 'invPaymentRequest',
+      label: 'Payment Request',
+      icon: 'ClipboardList',
+      route: '/invoicing/payments/payment-request',
+    },
+    {
+      key: 'invPaymentOrder',
+      label: 'Payment Order',
+      icon: 'FileCheck',
+      route: '/invoicing/payments/payment-order',
+    },
+    {
+      key: 'invPaymentReconciliation',
+      label: 'Payment Reconciliation',
+      icon: 'RefreshCw',
+      route: '/invoicing/payments/payment-reconciliation',
+    },
+    {
+      key: 'invUnreconcilePayment',
+      label: 'Unreconcile Payment',
+      icon: 'XCircle',
+      route: '/invoicing/payments/unreconcile-payment',
+    },
+    {
+      key: 'invProcessPaymentReco',
+      label: 'Process Payment Reco...',
+      icon: 'Settings',
+      route: '/invoicing/payments/process-payment-reco',
+    },
+    {
+      key: 'invRepostAccountingLedger',
+      label: 'Repost Accounting Led...',
+      icon: 'RotateCcw',
+      route: '/invoicing/payments/repost-accounting-ledger',
+    },
+    {
+      key: 'invRepostPaymentLedger',
+      label: 'Repost Payment Ledger',
+      icon: 'RotateCcw',
+      route: '/invoicing/payments/repost-payment-ledger',
+    },
+  ],
+  reports: [
+    {
+      key: 'generalLedger',
+      label: 'General Ledger',
+      icon: 'BookOpen',
+      route: '/invoicing/reports/general-ledger',
+    },
+    {
+      key: 'trialBalance',
+      label: 'Trial Balance',
+      icon: 'Scale',
+      route: '/invoicing/reports/trial-balance',
+    },
+    {
+      key: 'financialReports',
+      label: 'Financial Reports',
+      icon: 'BarChart2',
+      route: '/invoicing/reports/financial-reports',
+    },
+  ],
+  settings: [
+    {
+      key: 'invSettings',
+      label: 'Settings',
+      icon: 'Settings',
+      route: '/invoicing/settings',
+    },
+  ],
+  footer: [
+    {
+      key: 'invGettingStarted',
+      label: 'Getting Started',
+      icon: 'Compass',
+      route: '/invoicing/getting-started',
+    },
+  ],
+};
+
 export const PAYMENTS_SIDEBAR_CONFIG = {
   main: [
     {
