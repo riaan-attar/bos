@@ -38,6 +38,17 @@ const formatLabel = (segment) => {
     'project-wise-stock-tracking': 'Project wise Stock Tracking',
     'delayed-tasks-summary': 'Delayed Tasks Summary',
     'getting-started': 'Getting Started',
+    // Payments module
+    payments: 'Payments',
+    'payment-entry': 'Payment Entry',
+    'journal-entry': 'Journal Entry',
+    'payment-request': 'Payment Request',
+    'payment-order': 'Payment Order',
+    'payment-reconciliation': 'Payment Reconciliation',
+    'unreconcile-payment': 'Unreconcile Payment',
+    'process-payment-reco': 'Process Payment Reconciliation',
+    'repost-accounting-ledger': 'Repost Accounting Ledger',
+    'repost-payment-ledger': 'Repost Payment Ledger',
   };
 
   return map[segment] || segment.charAt(0).toUpperCase() + segment.slice(1);

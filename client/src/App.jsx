@@ -80,6 +80,15 @@ import StockGettingStarted from './modules/stock/StockGettingStarted';
 
 // Payments Module
 import PaymentsDashboard from './modules/payments/PaymentsDashboard';
+import PaymentsPaymentEntry from './modules/payments/PaymentEntry';
+import PaymentsJournalEntry from './modules/payments/JournalEntry';
+import PaymentsPaymentRequest from './modules/payments/PaymentRequest';
+import PaymentsPaymentOrder from './modules/payments/PaymentOrder';
+import PaymentsPaymentReconciliation from './modules/payments/PaymentReconciliation';
+import PaymentsUnreconcilePayment from './modules/payments/UnreconcilePayment';
+import PaymentsProcessPaymentReco from './modules/payments/ProcessPaymentReco';
+import PaymentsRepostAccountingLedger from './modules/payments/RepostAccountingLedger';
+import PaymentsRepostPaymentLedger from './modules/payments/RepostPaymentLedger';
 
 // Invoicing Module
 import InvoicingDashboard from './modules/invoicing/InvoicingDashboard';
@@ -251,7 +260,16 @@ export default function App() {
                       
                       {/* Payments Module Routes */}
                       <Route path="payments" element={<PaymentsDashboard />} />
-                      <Route path="payments/*" element={<PaymentsDashboard />} />
+                      <Route path="payments/dashboard" element={<PaymentsDashboard />} />
+                      <Route path="payments/payment-entry" element={<PaymentsPaymentEntry />} />
+                      <Route path="payments/journal-entry" element={<PaymentsJournalEntry />} />
+                      <Route path="payments/payment-request" element={<PaymentsPaymentRequest />} />
+                      <Route path="payments/payment-order" element={<PaymentsPaymentOrder />} />
+                      <Route path="payments/payment-reconciliation" element={<PaymentsPaymentReconciliation />} />
+                      <Route path="payments/unreconcile-payment" element={<PaymentsUnreconcilePayment />} />
+                      <Route path="payments/process-payment-reco" element={<PaymentsProcessPaymentReco />} />
+                      <Route path="payments/repost-accounting-ledger" element={<PaymentsRepostAccountingLedger />} />
+                      <Route path="payments/repost-payment-ledger" element={<PaymentsRepostPaymentLedger />} />
 
                       {/* Invoicing Module Routes */}
                       <Route path="invoicing" element={<InvoicingDashboard />} />

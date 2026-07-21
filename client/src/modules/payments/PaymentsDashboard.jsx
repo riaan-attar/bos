@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MoreHorizontal, Filter, Home } from 'lucide-react';
+import { MoreHorizontal, Filter } from 'lucide-react';
 import {
   ResponsiveContainer as ChartContainer,
   LineChart as RechartsLineChart,
@@ -118,10 +118,6 @@ export default function PaymentsDashboard() {
   return (
     <div style={{ padding: '20px 24px', backgroundColor: 'var(--bg-color, #f8f9fa)', minHeight: '100%', fontFamily: 'Inter, sans-serif' }}>
       
-      {/* Breadcrumb / Title area */}
-      <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#6b7280' }}>
-         <Home size={14} style={{ color: '#6b7280' }} /> / <span>Dashboard</span> / <span style={{ fontWeight: 600, color: '#1a1a2e' }}>Payments</span>
-      </div>
 
       {/* Stat Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>

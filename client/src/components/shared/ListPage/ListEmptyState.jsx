@@ -37,24 +37,27 @@ export default function ListEmptyState({ config, onCreateClick }) {
       >
         {config.emptyTitle}
       </p>
-      <button
-        {...hoverProps}
-        onClick={onCreateClick}
-        style={{
-          marginTop: '14px',
-          background: hov ? '#232323' : '#1c1c1c',
-          border: '1px solid #2b2b2b',
-          borderRadius: '20px',
-          padding: '8px 22px',
-          fontSize: '13px',
-          color: '#f8f8f8',
-          cursor: 'pointer',
-          fontFamily: 'Inter, sans-serif',
-          transition: 'background 0.15s',
-        }}
-      >
-        {config.emptyButtonText}
-      </button>
+      {!config.hideEmptyButton && (
+        <button
+          {...hoverProps}
+          onClick={onCreateClick}
+          style={{
+            marginTop: '14px',
+            background: hov ? '#232323' : '#1c1c1c',
+            border: '1px solid #2b2b2b',
+            borderRadius: '20px',
+            padding: '8px 22px',
+            fontSize: '13px',
+            color: '#f8f8f8',
+            cursor: 'pointer',
+            fontFamily: 'Inter, sans-serif',
+            transition: 'background 0.15s',
+          }}
+        >
+          {config.emptyButtonText}
+        </button>
+      )}
     </div>
   );
 }
+

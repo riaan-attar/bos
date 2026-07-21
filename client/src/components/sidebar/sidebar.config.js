@@ -559,7 +559,7 @@ export const PAYMENTS_SIDEBAR_CONFIG = {
       key: 'processPaymentReconciliation',
       label: 'Process Payment Reconc...',
       icon: 'Settings',
-      route: '/payments/process-payment-reconciliation',
+      route: '/payments/process-payment-reco',
     },
     {
       key: 'repostAccountingLedger',

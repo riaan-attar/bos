@@ -117,7 +117,9 @@ function TopbarActions({ config, onAdd }) {
       <TopbarBtn style={{ padding: '4px 7px' }}>
         <MoreHorizontal size={13} color="#7c7c7c" />
       </TopbarBtn>
-      <AddBtn label={config.addButtonLabel} onClick={onAdd} />
+      {!config.hideAddButton && (
+        <AddBtn label={config.addButtonLabel} onClick={onAdd} />
+      )}
     </div>
   );
 }
