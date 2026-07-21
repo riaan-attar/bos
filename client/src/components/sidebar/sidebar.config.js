@@ -576,10 +576,34 @@ export const PAYMENTS_SIDEBAR_CONFIG = {
   ],
   reports: [
     {
-      key: 'reports',
-      label: 'Reports',
+      key: 'accountsReceivable',
+      label: 'Accounts Receivable',
+      icon: 'TrendingUp',
+      route: '/invoicing/receivables/accounts-receivable',
+    },
+    {
+      key: 'accountsPayable',
+      label: 'Accounts Payable',
+      icon: 'TrendingDown',
+      route: '/invoicing/payables/accounts-payable',
+    },
+    {
+      key: 'generalLedger',
+      label: 'General Ledger',
+      icon: 'BookOpen',
+      route: '/invoicing/reports/general-ledger',
+    },
+    {
+      key: 'trialBalance',
+      label: 'Trial Balance',
+      icon: 'Scale',
+      route: '/invoicing/reports/trial-balance',
+    },
+    {
+      key: 'financialReports',
+      label: 'Financial Reports',
       icon: 'BarChart2',
-      route: '/payments/reports',
+      route: '/invoicing/reports/financial-reports',
     },
   ],
   footer: [
