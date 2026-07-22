@@ -32,14 +32,66 @@ const SerialNo = require('./SerialNo.model');
 const Batch = require('./Batch.model');
 const QualityInspection = require('./QualityInspection.model');
 
+// Invoicing Models
+const InvAccount = require('./InvAccount.model');
+const InvCustomer = require('./InvCustomer.model');
+const InvSupplier = require('./InvSupplier.model');
+const SalesInvoice = require('./SalesInvoice.model');
+const SalesInvoiceItem = require('./SalesInvoiceItem.model');
+const PurchaseInvoice = require('./PurchaseInvoice.model');
+const PurchaseInvoiceItem = require('./PurchaseInvoiceItem.model');
+const CreditNote = require('./CreditNote.model');
+const DebitNote = require('./DebitNote.model');
+const JournalEntry = require('./JournalEntry.model');
+const JournalEntryAccount = require('./JournalEntryAccount.model');
 
-// Define associations
+// Payment Models
+const PaymentEntry = require('./PaymentEntry.model');
+const PaymentRequest = require('./PaymentRequest.model');
+const PaymentOrder = require('./PaymentOrder.model');
+const UnreconcilePayment = require('./UnreconcilePayment.model');
+const ProcessPaymentReco = require('./ProcessPaymentReco.model');
+const RepostAccountingLedger = require('./RepostAccountingLedger.model');
+const RepostPaymentLedger = require('./RepostPaymentLedger.model');
+
+
+// Define associations — CRM
 Lead.hasMany(Opportunity, { foreignKey: 'linkedLeadId', as: 'opportunities' });
 Opportunity.belongsTo(Lead, { foreignKey: 'linkedLeadId', as: 'lead' });
 
 // Define associations for Project module
 Project.hasMany(ProjectTask, { foreignKey: 'project', sourceKey: 'projectName', as: 'tasks' });
 ProjectTask.belongsTo(Project, { foreignKey: 'project', targetKey: 'projectName', as: 'projectInfo' });
+
+// Invoicing associations — Sales
+InvCustomer.hasMany(SalesInvoice, { foreignKey: 'customerId' });
+SalesInvoice.belongsTo(InvCustomer, { foreignKey: 'customerId' });
+
+SalesInvoice.hasMany(SalesInvoiceItem, { foreignKey: 'salesInvoiceId', onDelete: 'CASCADE' });
+SalesInvoiceItem.belongsTo(SalesInvoice, { foreignKey: 'salesInvoiceId' });
+
+// Invoicing associations — Purchase
+InvSupplier.hasMany(PurchaseInvoice, { foreignKey: 'supplierId' });
+PurchaseInvoice.belongsTo(InvSupplier, { foreignKey: 'supplierId' });
+
+PurchaseInvoice.hasMany(PurchaseInvoiceItem, { foreignKey: 'purchaseInvoiceId', onDelete: 'CASCADE' });
+PurchaseInvoiceItem.belongsTo(PurchaseInvoice, { foreignKey: 'purchaseInvoiceId' });
+
+// Invoicing associations — Notes
+InvCustomer.hasMany(CreditNote, { foreignKey: 'customerId' });
+CreditNote.belongsTo(InvCustomer, { foreignKey: 'customerId' });
+
+InvSupplier.hasMany(DebitNote, { foreignKey: 'supplierId' });
+DebitNote.belongsTo(InvSupplier, { foreignKey: 'supplierId' });
+
+// Invoicing associations — Journal
+JournalEntry.hasMany(JournalEntryAccount, { foreignKey: 'journalEntryId', onDelete: 'CASCADE' });
+JournalEntryAccount.belongsTo(JournalEntry, { foreignKey: 'journalEntryId' });
+
+// Payments associations
+UnreconcilePayment.belongsTo(PaymentEntry, { foreignKey: 'paymentEntryId' });
+PaymentEntry.hasMany(UnreconcilePayment, { foreignKey: 'paymentEntryId' });
+
 
 module.exports = {
   sequelize,
@@ -70,5 +122,25 @@ module.exports = {
   UnitOfMeasure,
   SerialNo,
   Batch,
-  QualityInspection
+  QualityInspection,
+  // Invoicing
+  InvAccount,
+  InvCustomer,
+  InvSupplier,
+  SalesInvoice,
+  SalesInvoiceItem,
+  PurchaseInvoice,
+  PurchaseInvoiceItem,
+  CreditNote,
+  DebitNote,
+  JournalEntry,
+  JournalEntryAccount,
+  // Payments
+  PaymentEntry,
+  PaymentRequest,
+  PaymentOrder,
+  UnreconcilePayment,
+  ProcessPaymentReco,
+  RepostAccountingLedger,
+  RepostPaymentLedger,
 };
